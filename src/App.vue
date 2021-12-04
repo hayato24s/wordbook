@@ -15,7 +15,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <HelloWorld />
+  <div id="app">
+    <router-view />
+  </div>
 </template>
 
 <style>
