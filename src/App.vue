@@ -2,12 +2,9 @@
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
 import { defineComponent } from "@vue/runtime-core";
-import HelloWorld from "./components/HelloWorld.vue";
 
 export default defineComponent({
-  components: {
-    HelloWorld: HelloWorld,
-  },
+  components: {},
   setup() {
     console.log("app");
   },
@@ -15,16 +12,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <router-view />
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+<style lang="scss">
+@import "~/scss/main.scss";
 </style>

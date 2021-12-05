@@ -2,12 +2,15 @@
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
-  setup() {
-    console.log("book");
-  },
+  name: "Header",
+  setup() {},
 });
 </script>
 
 <template>
-  <div class="book">book</div>
+  <div class="header"></div>
 </template>
+
+<style lang="scss" scoped>
+@import "~/scss/main.scss";
+</style>

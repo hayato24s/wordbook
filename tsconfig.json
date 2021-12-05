@@ -10,7 +10,10 @@
     "noImplicitReturns": true,
     "jsx": "preserve",
     "sourceMap": true,
-    "baseUrl": "./src",
+    "baseUrl": "./",
+    "paths": {
+      "~/*": ["./src/*"]
+    },
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom"]

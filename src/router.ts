@@ -1,12 +1,11 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Book from "./components/Book.vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import Preview from "~/pages/Preview.vue";
 
 const history = createWebHistory();
 
 const routes = [
-  { path: "/", component: HelloWorld },
-  { path: "/book", component: Book },
+  { path: "/", component: Preview },
+  { path: "/preview", component: Preview },
 ];
 
 export const router = createRouter({
