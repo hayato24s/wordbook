@@ -8,6 +8,7 @@ import EvaluationButton from "~/components/EvaluationButton.vue";
 import Question from "~/components/Question.vue";
 import { Word } from "~/entities/word";
 import { Context } from "vm";
+import Header from "~/components/Header.vue";
 
 export default defineComponent({
   name: "Preview",
@@ -18,6 +19,7 @@ export default defineComponent({
     Face: Face,
     EvaluationButton: EvaluationButton,
     Question: Question,
+    Header,
   },
   setup() {
     const handleClick = () => {
@@ -194,6 +196,23 @@ export default defineComponent({
     <Question :word="word2" :showHeaer="false" :showAnswer="true" />
     <Question :word="word3" :showHeaer="true" :showAnswer="true" />
     <Question :word="word4" :showHeaer="true" :showAnswer="true" />
+    <Header>
+      <template #left-btn>
+        <IconButton size="small" color="black" iconName="back" />
+      </template>
+      <template #text>学習</template>
+    </Header>
+    <Header>
+      <template #left-btn>
+        <IconButton size="small" color="black" iconName="back" />
+      </template>
+      <template #text>音声（一覧）</template>
+      <template #right-btn>
+        <IconButton size="small" color="black" iconName="reverse" />
+        <IconButton size="small" color="black" iconName="shuffle" />
+        <IconButton size="small" color="black" iconName="list" />
+      </template>
+    </Header>
   </div>
 </template>
 
