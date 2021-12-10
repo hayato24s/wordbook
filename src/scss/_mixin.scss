@@ -2,3 +2,10 @@
   cursor: pointer;
   user-select: none;
 }
+
+@mixin center-flex($direction: row) {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: $direction;
+}

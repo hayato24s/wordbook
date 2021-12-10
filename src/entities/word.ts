@@ -29,6 +29,15 @@ export type Word = {
 
 export type ChapterJa = "助走" | "加速" | "飛躍" | "頂点" | "重要" | "多義";
 
+export const chapters: Chapter[] = [
+  "Beginning",
+  "Acceleration",
+  "Leap",
+  "Top",
+  "Important",
+  "Multiple",
+];
+
 export const chapterMap: Record<Chapter, ChapterJa> = {
   Beginning: "助走",
   Acceleration: "加速",

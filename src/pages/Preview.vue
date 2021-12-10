@@ -1,14 +1,16 @@
 <script lang="ts">
-import { defineComponent, onMounted, ref } from "@vue/runtime-core";
+import { defineComponent, ref, reactive } from "@vue/runtime-core";
 import Button from "~/components/Button.vue";
 import IconButton from "~/components/IconButton.vue";
 import SvgWrapper from "~/components/SvgWrapper.vue";
 import Face from "~/components/Face.vue";
 import EvaluationButton from "~/components/EvaluationButton.vue";
 import Question from "~/components/Question.vue";
-import { Word } from "~/entities/word";
-import { Context } from "vm";
+import { Chapter, chapters, Word } from "~/entities/word";
 import Header from "~/components/Header.vue";
+import Table from "~/components/Table.vue";
+import CheckBox from "~/components/CheckBox.vue";
+import { Evaluation, evaluations } from "~/entities/evaluation";
 
 export default defineComponent({
   name: "Preview",
@@ -20,6 +22,8 @@ export default defineComponent({
     EvaluationButton: EvaluationButton,
     Question: Question,
     Header,
+    Table,
+    CheckBox,
   },
   setup() {
     const handleClick = () => {
@@ -156,12 +160,37 @@ export default defineComponent({
       ],
     };
 
+    const checked = ref(true);
+
+    const filter = reactive<Record<Chapter, Record<Evaluation, boolean>>>(
+      chapters.reduce((obj1, chapter) => {
+        obj1[chapter] = evaluations.reduce((obj2, evaluation) => {
+          obj2[evaluation] = false;
+          return obj2;
+        }, {} as Record<Evaluation, boolean>);
+        return obj1;
+      }, {} as Record<Chapter, Record<Evaluation, boolean>>)
+    );
+
+    const updateFilter = ({
+      chapter,
+      evaluation,
+    }: {
+      chapter: Chapter;
+      evaluation: Evaluation;
+    }) => {
+      filter[chapter][evaluation] = !filter[chapter][evaluation];
+    };
+
     return {
       handleClick,
       word1,
       word2,
       word3,
       word4,
+      checked,
+      filter,
+      updateFilter,
     };
   },
 });
@@ -213,6 +242,8 @@ export default defineComponent({
         <IconButton size="small" color="black" iconName="list" />
       </template>
     </Header>
+    <CheckBox @click="() => (checked = !checked)" :checked="checked" />
+    <Table @update:filter="updateFilter" :filter="filter" />
   </div>
 </template>
 
