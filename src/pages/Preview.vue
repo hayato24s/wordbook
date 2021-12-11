@@ -10,7 +10,13 @@ import { Chapter, chapters, Word } from "~/entities/word";
 import Header from "~/components/Header.vue";
 import Table from "~/components/Table.vue";
 import CheckBox from "~/components/CheckBox.vue";
+import Audio from "~/components/Audio.vue";
+import AudioBar from "~/components/AudioBar.vue";
 import { Evaluation, evaluations } from "~/entities/evaluation";
+import src1 from "~/data/001.mp3";
+import src2 from "~/data/002.mp3";
+import src3 from "~/data/003.mp3";
+import { clamp } from "~/utils";
 
 export default defineComponent({
   name: "Preview",
@@ -24,6 +30,8 @@ export default defineComponent({
     Header,
     Table,
     CheckBox,
+    Audio,
+    AudioBar,
   },
   setup() {
     const handleClick = () => {
@@ -182,6 +190,13 @@ export default defineComponent({
       filter[chapter][evaluation] = !filter[chapter][evaluation];
     };
 
+    const sources = [src1, src2, src3];
+    const index = ref(0);
+
+    const changeAudio = (i: number) => {
+      index.value = clamp(index.value + i, 0, sources.length - 1);
+    };
+
     return {
       handleClick,
       word1,
@@ -191,6 +206,9 @@ export default defineComponent({
       checked,
       filter,
       updateFilter,
+      sources,
+      index,
+      changeAudio,
     };
   },
 });
@@ -207,6 +225,7 @@ export default defineComponent({
     <IconButton size="small" color="black" iconName="listening" />
     <IconButton size="small" color="black" iconName="learn" />
     <IconButton size="large" color="red" iconName="play" />
+    <IconButton size="large" color="red" iconName="pause" />
     <IconButton size="large" color="red" iconName="next" />
     <IconButton size="large" color="red" iconName="prev" />
     <IconButton size="small" color="gray" iconName="right" />
@@ -244,6 +263,8 @@ export default defineComponent({
     </Header>
     <CheckBox @click="() => (checked = !checked)" :checked="checked" />
     <Table @update:filter="updateFilter" :filter="filter" />
+    <AudioBar :currentTime="1" :duration="3" />
+    <Audio @change="changeAudio" :src="sources[index]" />
   </div>
 </template>
 

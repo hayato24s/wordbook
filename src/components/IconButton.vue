@@ -7,6 +7,7 @@ const iconNameMap = {
   shuffle: "shuffle",
   list: "format_list_bulleted",
   play: "play_circle_outline",
+  pause: "pause_circle_outline",
   next: "skip_next",
   prev: "skip_previous",
   listening: "headphones",
