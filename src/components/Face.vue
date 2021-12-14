@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
-import { Evaluation } from "~/entities/evaluation";
+import { Evaluation } from "~/firebase/types";
 
 const iconNameMap: Record<Evaluation, string> = {
   Excellent: "sentiment_very_satisfied",

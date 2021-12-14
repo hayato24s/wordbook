@@ -5,6 +5,7 @@ import EvaluationButton from "~/components/EvaluationButton.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Question from "~/components/Question.vue";
+import { Word } from "~/firebase/types";
 
 export default defineComponent({
   name: "Problem",

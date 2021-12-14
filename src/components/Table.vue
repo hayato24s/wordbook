@@ -1,9 +1,10 @@
 <script lang="ts">
 import { defineComponent, PropType } from "@vue/runtime-core";
-import { Evaluation, evaluations } from "~/entities/evaluation";
-import { chapters, chapterMap, Chapter } from "~/entities/word";
+import { evaluations } from "~/entities/evaluation";
+import { chapters, chapterMap } from "~/entities/word";
 import CheckBox from "~/components/CheckBox.vue";
 import Face from "~/components/Face.vue";
+import { Chapter, Evaluation } from "~/firebase/types";
 
 export default defineComponent({
   name: "Table",

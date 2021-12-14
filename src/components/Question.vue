@@ -3,12 +3,12 @@ import { defineComponent, PropType, computed } from "@vue/runtime-core";
 import { zeroPadding } from "~/utils";
 import {
   englishToDisplay,
-  Word,
   chapterMap,
   japaneseToDislay,
 } from "~/entities/word";
 import Character from "./Character.vue";
 import Sentence from "./Sentence.vue";
+import { Word } from "~/firebase/types";
 
 export default defineComponent({
   name: "Question",

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType } from "@vue/runtime-core";
-import { Evaluation } from "~/entities/evaluation";
+import { Evaluation } from "~/firebase/types";
 
 export default defineComponent({
   name: "EvaluationButton",
