@@ -1,27 +1,27 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
+import Audio from "~/components/Audio.vue";
 import Button from "~/components/Button.vue";
-import EvaluationButton from "~/components/EvaluationButton.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Question from "~/components/Question.vue";
 import { Word } from "~/entities/word";
+import src1 from "~/data/001.mp3";
+import src2 from "~/data/002.mp3";
+import src3 from "~/data/003.mp3";
+import { clamp } from "~/utils";
 
 export default defineComponent({
-  name: "Problem",
+  name: "Defail",
   components: {
+    Audio,
     Button,
-    EvaluationButton,
     Header,
     IconButton,
     Question,
   },
   setup() {
     const showAnswer = ref(false);
-
-    const handleClick = () => {
-      console.log("clicked");
-    };
 
     const word1: Word = {
       id: "uuid 001",
@@ -51,53 +51,54 @@ export default defineComponent({
       ],
     };
 
+    const sources = [src1, src2, src3];
+    const index = ref(0);
+
+    const changeAudio = (i: number) => {
+      index.value = clamp(index.value + i, 0, sources.length - 1);
+    };
+
     return {
       showAnswer,
       word1,
-      handleClick,
+      sources,
+      index,
+      changeAudio,
     };
   },
 });
 </script>
 
 <template>
-  <div class="problem">
+  <div class="detail">
     <Header>
       <template #left-btn>
         <IconButton
-          @click="$router.push('/')"
+          @click="$router.back()"
           size="small"
           color="black"
           iconName="back"
         />
       </template>
-      <template #text>学習</template>
+      <template #text>音声</template>
     </Header>
     <div class="main">
       <Question
         class="main__question"
         :word="word1"
-        :showHeader="showAnswer"
+        showHeader
         :showAnswer="showAnswer"
       />
-      <div class="main__buttons">
-        <Button v-if="!showAnswer" @click="showAnswer = true"
-          >Show Answer</Button
-        >
-        <template v-if="showAnswer">
-          <EvaluationButton evaluation="Excellent" />
-          <EvaluationButton evaluation="Good" />
-          <EvaluationButton evaluation="Poor" />
-        </template>
-      </div>
+      <Button @click="showAnswer = true">Show Answer</Button>
     </div>
+    <Audio @change="changeAudio" :src="sources[index]" />
   </div>
 </template>
 
 <style lang="scss" scoped>
 @import "~/scss/main.scss";
 
-.problem {
+.detail {
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -105,26 +106,7 @@ export default defineComponent({
 
 .main {
   flex-grow: 1;
-  position: relative;
 
-  &__question {
-    position: absolute;
-    left: 50%;
-    bottom: 50%;
-    transform: translateX(-50%);
-  }
-
-  &__buttons {
-    width: 100%;
-
-    position: absolute;
-    left: 50%;
-    bottom: 25%;
-    transform: translate(-50%, 50%);
-
-    display: grid;
-    justify-items: center;
-    gap: 2rem;
-  }
+  @include flex-evenly(column);
 }
 </style>

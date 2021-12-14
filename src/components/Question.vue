@@ -21,7 +21,7 @@ export default defineComponent({
       type: Object as PropType<Word>,
       required: true,
     },
-    showHeaer: {
+    showHeader: {
       type: Boolean,
       required: true,
     },
@@ -30,12 +30,16 @@ export default defineComponent({
       required: true,
     },
   },
-  setup({ word, showAnswer }) {
-    const no = computed(() => zeroPadding(word.no, word.no < 1000 ? 3 : 4));
-    const chapter = computed(() => chapterMap[word.chapter]);
+  setup(props) {
+    const no = computed(() =>
+      zeroPadding(props.word.no, props.word.no < 1000 ? 3 : 4)
+    );
+    const chapter = computed(() => chapterMap[props.word.chapter]);
     const header = computed(() => `${chapter.value}    No.${no.value}`);
-    const english = computed(() => englishToDisplay(word.english, showAnswer));
-    const japanese = computed(() => japaneseToDislay(word.japanese));
+    const english = computed(() =>
+      englishToDisplay(props.word.english, props.showAnswer)
+    );
+    const japanese = computed(() => japaneseToDislay(props.word.japanese));
 
     return {
       header,
@@ -48,7 +52,7 @@ export default defineComponent({
 
 <template>
   <div class="question">
-    <div v-if="showHeaer" class="question__header">{{ header }}</div>
+    <div v-if="showHeader" class="question__header">{{ header }}</div>
     <div id="japanese" class="question__japanese">
       <Sentence :sentence="japanese" />
     </div>

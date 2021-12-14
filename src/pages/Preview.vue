@@ -266,12 +266,12 @@ export default defineComponent({
     <EvaluationButton evaluation="Excellent" />
     <EvaluationButton evaluation="Good" />
     <EvaluationButton evaluation="Poor" />
-    <Question :word="word1" :showHeaer="false" :showAnswer="false" />
-    <Question :word="word1" :showHeaer="true" showAnswer />
-    <Question :word="word2" :showHeaer="true" :showAnswer="false" />
-    <Question :word="word2" :showHeaer="false" :showAnswer="true" />
-    <Question :word="word3" :showHeaer="true" :showAnswer="true" />
-    <Question :word="word4" :showHeaer="true" :showAnswer="true" />
+    <Question :word="word1" :showHeader="false" :showAnswer="false" />
+    <Question :word="word1" :showHeader="true" showAnswer />
+    <Question :word="word2" :showHeader="true" :showAnswer="false" />
+    <Question :word="word2" :showHeader="false" :showAnswer="true" />
+    <Question :word="word3" :showHeader="true" :showAnswer="true" />
+    <Question :word="word4" :showHeader="true" :showAnswer="true" />
     <Header>
       <template #left-btn>
         <IconButton size="small" color="black" iconName="back" />
