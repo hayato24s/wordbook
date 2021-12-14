@@ -9,6 +9,7 @@
     "format": "prettier ./src/**/*.{ts,vue} --write"
   },
   "dependencies": {
+    "firebase": "^9.6.1",
     "vue": "^3.2.16",
     "vue-router": "4"
   },
