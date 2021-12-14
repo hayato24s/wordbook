@@ -1,6 +1,5 @@
-export const zeroPadding = (value: number): string => {
-  if (value === 1000) return String(1000);
-  return ("000" + String(value)).slice(-3);
+export const zeroPadding = (no: number, digit: number = 3): string => {
+  return ("0".repeat(digit) + no).slice(-digit);
 };
 
 export const clamp = (value: number, min: number, max: number) => {

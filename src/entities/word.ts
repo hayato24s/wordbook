@@ -80,3 +80,10 @@ export const japaneseToDislay = (ja: string): DisplayedSentence => {
     return ret;
   }, [] as DisplayedSentence);
 };
+
+export const formatSubNo = (sub_no: number): string => {
+  if (sub_no === 1) return "1st";
+  if (sub_no === 2) return "2nd";
+  if (sub_no === 3) return "3rd";
+  return `${sub_no}th`;
+};

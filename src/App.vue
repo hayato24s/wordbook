@@ -12,7 +12,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <router-view />
+  <Suspense>
+    <template #default>
+      <router-view />
+    </template>
+    <template #fallback>
+      <div class="loading">...Loading</div>
+    </template>
+  </Suspense>
 </template>
 
 <style lang="scss">

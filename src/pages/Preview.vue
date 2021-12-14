@@ -12,11 +12,14 @@ import Table from "~/components/Table.vue";
 import CheckBox from "~/components/CheckBox.vue";
 import Audio from "~/components/Audio.vue";
 import AudioBar from "~/components/AudioBar.vue";
+import WordList from "~/components/WordList.vue";
 import { Evaluation, evaluations } from "~/entities/evaluation";
 import src1 from "~/data/001.mp3";
 import src2 from "~/data/002.mp3";
 import src3 from "~/data/003.mp3";
 import { clamp } from "~/utils";
+import { db } from "~/firebase";
+import { addDoc, collection, getDocs } from "firebase/firestore";
 
 export default defineComponent({
   name: "Preview",
@@ -32,8 +35,9 @@ export default defineComponent({
     CheckBox,
     Audio,
     AudioBar,
+    WordList,
   },
-  setup() {
+  async setup() {
     const handleClick = () => {
       console.log("clicked");
     };
@@ -197,6 +201,23 @@ export default defineComponent({
       index.value = clamp(index.value + i, 0, sources.length - 1);
     };
 
+    // try {
+    //   const docRef = await addDoc(collection(db, "users"), {
+    //     first: "Ada",
+    //     last: "Lovelace",
+    //     born: 1815,
+    //   });
+    //   console.log("Document written with ID: ", docRef.id);
+    // } catch (e) {
+    //   console.error("Error adding document: ", e);
+    // }
+
+    // const querySnapshot = await getDocs(collection(db, "users"));
+    // querySnapshot.forEach((doc) => {
+    //   // doc.data() is never undefined for query doc snapshots
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+
     return {
       handleClick,
       word1,
@@ -265,6 +286,19 @@ export default defineComponent({
     <Table @update:filter="updateFilter" :filter="filter" />
     <AudioBar :currentTime="1" :duration="3" />
     <Audio @change="changeAudio" :src="sources[index]" />
+    <WordList
+      :no="1"
+      word="anyway"
+      chapter="Acceleration"
+      evaluation="Excellent"
+    />
+    <WordList
+      :no="1"
+      :subNo="1"
+      word="accommodate"
+      chapter="Multiple"
+      evaluation="NotLearned"
+    />
   </div>
 </template>
 

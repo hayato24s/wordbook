@@ -31,7 +31,7 @@ export default defineComponent({
     },
   },
   setup({ word, showAnswer }) {
-    const no = computed(() => zeroPadding(word.no));
+    const no = computed(() => zeroPadding(word.no, word.no < 1000 ? 3 : 4));
     const chapter = computed(() => chapterMap[word.chapter]);
     const header = computed(() => `${chapter.value}    No.${no.value}`);
     const english = computed(() => englishToDisplay(word.english, showAnswer));
