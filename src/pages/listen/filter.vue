@@ -4,8 +4,9 @@ import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Table from "~/components/Table.vue";
-import { Evaluation, evaluations } from "~/entities/evaluation";
-import { Chapter, chapters } from "~/entities/word";
+import { evaluations } from "~/entities/evaluation";
+import { chapters } from "~/entities/word";
+import { Chapter, Evaluation } from "~/firebase/types";
 
 export default defineComponent({
   name: "Filter",

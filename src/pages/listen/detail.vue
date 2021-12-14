@@ -5,10 +5,10 @@ import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Question from "~/components/Question.vue";
-import { Word } from "~/entities/word";
 import src1 from "~/data/001.mp3";
 import src2 from "~/data/002.mp3";
 import src3 from "~/data/003.mp3";
+import { Word } from "~/firebase/types";
 import { clamp } from "~/utils";
 
 export default defineComponent({

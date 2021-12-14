@@ -6,7 +6,7 @@ import SvgWrapper from "~/components/SvgWrapper.vue";
 import Face from "~/components/Face.vue";
 import EvaluationButton from "~/components/EvaluationButton.vue";
 import Question from "~/components/Question.vue";
-import { Chapter, chapters, Word } from "~/entities/word";
+import { chapters } from "~/entities/word";
 import Header from "~/components/Header.vue";
 import Table from "~/components/Table.vue";
 import CheckBox from "~/components/CheckBox.vue";
@@ -15,13 +15,14 @@ import AudioBar from "~/components/AudioBar.vue";
 import WordList from "~/components/WordList.vue";
 import GrayFilter from "~/components/GrayFilter.vue";
 import ProgressModal from "~/components/ProgressModal.vue";
-import { Evaluation, evaluations } from "~/entities/evaluation";
+import { evaluations } from "~/entities/evaluation";
 import src1 from "~/data/001.mp3";
 import src2 from "~/data/002.mp3";
 import src3 from "~/data/003.mp3";
 import { clamp } from "~/utils";
 import { db } from "~/firebase";
 import { addDoc, collection, getDocs } from "firebase/firestore";
+import { Chapter, Evaluation, Word } from "~/firebase/types";
 
 export default defineComponent({
   name: "Preview",
@@ -298,6 +299,7 @@ export default defineComponent({
       word="anyway"
       chapter="Acceleration"
       evaluation="Excellent"
+      :isActive="true"
     />
     <WordList
       :no="1"
@@ -305,6 +307,7 @@ export default defineComponent({
       word="accommodate"
       chapter="Multiple"
       evaluation="NotLearned"
+      :isActive="false"
     />
     <GrayFilter v-show="grayFilter" />
     <button @click="grayFilter = !grayFilter">click to open filter</button>

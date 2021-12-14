@@ -1,31 +1,9 @@
-export type English = {
-  value: string;
-  beginning: string;
-  end: string;
-  is_answer: boolean;
-}[];
+import { Chapter, English } from "~/firebase/types";
 
 export type DisplayedSentence = {
   char: string;
   isRed: boolean;
 }[];
-
-export type Chapter =
-  | "Beginning"
-  | "Acceleration"
-  | "Leap"
-  | "Top"
-  | "Important"
-  | "Multiple";
-
-export type Word = {
-  id: string;
-  no: number;
-  sub_no: number;
-  chapter: Chapter;
-  english: English;
-  japanese: string;
-};
 
 export type ChapterJa = "助走" | "加速" | "飛躍" | "頂点" | "重要" | "多義";
 

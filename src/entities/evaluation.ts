@@ -1,4 +1,4 @@
-export type Evaluation = "Excellent" | "Good" | "Poor" | "NotLearned";
+import { Evaluation } from "~/firebase/types";
 
 export const evaluations: Evaluation[] = [
   "Excellent",

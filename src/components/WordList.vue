@@ -1,10 +1,10 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
-import { Evaluation } from "~/entities/evaluation";
-import { Chapter, chapterMap, formatSubNo } from "~/entities/word";
+import { chapterMap, formatSubNo } from "~/entities/word";
 import Face from "~/components/Face.vue";
 import IconButton from "~/components/IconButton.vue";
 import { zeroPadding } from "~/utils";
+import { Chapter, Evaluation } from "~/firebase/types";
 
 export default defineComponent({
   name: "WordList",
@@ -33,6 +33,10 @@ export default defineComponent({
       type: String as PropType<Evaluation>,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      required: true,
+    },
   },
   emits: ["click-face", "click-arrow"],
   setup(props) {
@@ -51,7 +55,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="word-list">
+  <div :class="{ 'word-list': true, '--active': isActive }">
     <div class="word-list__left">
       <div class="word-list__text">
         {{ chapterMap[chapter] }}
@@ -90,6 +94,10 @@ export default defineComponent({
   align-items: center;
 
   padding: 0 1.6rem;
+
+  &.--active {
+    color: $bright-red;
+  }
 
   &__left {
     display: grid;
