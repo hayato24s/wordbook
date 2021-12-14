@@ -13,6 +13,8 @@ import CheckBox from "~/components/CheckBox.vue";
 import Audio from "~/components/Audio.vue";
 import AudioBar from "~/components/AudioBar.vue";
 import WordList from "~/components/WordList.vue";
+import GrayFilter from "~/components/GrayFilter.vue";
+import ProgressModal from "~/components/ProgressModal.vue";
 import { Evaluation, evaluations } from "~/entities/evaluation";
 import src1 from "~/data/001.mp3";
 import src2 from "~/data/002.mp3";
@@ -36,6 +38,8 @@ export default defineComponent({
     Audio,
     AudioBar,
     WordList,
+    GrayFilter,
+    ProgressModal,
   },
   async setup() {
     const handleClick = () => {
@@ -218,6 +222,8 @@ export default defineComponent({
     //   console.log(doc.id, " => ", doc.data());
     // });
 
+    const grayFilter = ref(false);
+
     return {
       handleClick,
       word1,
@@ -230,6 +236,7 @@ export default defineComponent({
       sources,
       index,
       changeAudio,
+      grayFilter,
     };
   },
 });
@@ -299,6 +306,9 @@ export default defineComponent({
       chapter="Multiple"
       evaluation="NotLearned"
     />
+    <GrayFilter v-show="grayFilter" />
+    <button @click="grayFilter = !grayFilter">click to open filter</button>
+    <ProgressModal />
   </div>
 </template>
 
