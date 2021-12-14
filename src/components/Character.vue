@@ -23,6 +23,8 @@ export default defineComponent({
 @import "~/scss/main.scss";
 
 .character {
+  user-select: none;
+
   &.--black {
     color: $black;
   }

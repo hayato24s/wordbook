@@ -9,3 +9,10 @@
   align-items: center;
   flex-direction: $direction;
 }
+
+@mixin flex-evenly($direction: row) {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: $direction;
+}
