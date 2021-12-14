@@ -6,7 +6,6 @@ import SvgWrapper from "~/components/SvgWrapper.vue";
 import Face from "~/components/Face.vue";
 import EvaluationButton from "~/components/EvaluationButton.vue";
 import Question from "~/components/Question.vue";
-import { chapters } from "~/entities/word";
 import Header from "~/components/Header.vue";
 import Table from "~/components/Table.vue";
 import CheckBox from "~/components/CheckBox.vue";
@@ -23,6 +22,7 @@ import { clamp } from "~/utils";
 import { db } from "~/firebase";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { Chapter, Evaluation, Word } from "~/firebase/types";
+import { chapters } from "~/entities/chapter";
 
 export default defineComponent({
   name: "Preview",

@@ -1,7 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from "@vue/runtime-core";
 import { evaluations } from "~/entities/evaluation";
-import { chapters, chapterMap } from "~/entities/word";
+import { chapterMap, chapters } from "~/entities/chapter";
 import CheckBox from "~/components/CheckBox.vue";
 import Face from "~/components/Face.vue";
 import { Chapter, Evaluation } from "~/firebase/types";

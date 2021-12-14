@@ -1,6 +1,7 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
-import { chapterMap, formatSubNo } from "~/entities/word";
+import { chapterMap } from "~/entities/chapter";
+import { formatSubNo } from "~/entities/word";
 import Face from "~/components/Face.vue";
 import IconButton from "~/components/IconButton.vue";
 import { zeroPadding } from "~/utils";

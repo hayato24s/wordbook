@@ -1,14 +1,11 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
 import { zeroPadding } from "~/utils";
-import {
-  englishToDisplay,
-  chapterMap,
-  japaneseToDislay,
-} from "~/entities/word";
+import { englishToDisplay, japaneseToDislay } from "~/entities/word";
 import Character from "./Character.vue";
 import Sentence from "./Sentence.vue";
 import { Word } from "~/firebase/types";
+import { chapterMap } from "~/entities/chapter";
 
 export default defineComponent({
   name: "Question",
