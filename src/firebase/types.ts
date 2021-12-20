@@ -1,9 +1,4 @@
-export type English = {
-  value: string;
-  beginning: string;
-  end: string;
-  is_answer: boolean;
-}[];
+export type User = { uid: string; name: string; permission: boolean };
 
 export type Chapter =
   | "Beginning"
@@ -12,6 +7,20 @@ export type Chapter =
   | "Top"
   | "Important"
   | "Multiple";
+
+export type EnglishWord = {
+  initial: string;
+  middle: string;
+  end: string;
+  is_red: boolean;
+};
+
+export type EnglishSentence = EnglishWord[];
+
+export type English = {
+  subject: string;
+  sentence: EnglishSentence;
+};
 
 export type Word = {
   id: string;
@@ -23,3 +32,5 @@ export type Word = {
 };
 
 export type Evaluation = "Excellent" | "Good" | "Poor" | "NotLearned";
+
+export type EvaluationMap = Record<string, Evaluation>;
