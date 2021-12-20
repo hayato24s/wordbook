@@ -1,24 +1,48 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getFirestore } from "firebase/firestore";
-import { collection, addDoc } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import {
+  createUser,
+  getUser,
+  getWords,
+  getEvaluations,
+  setEvaluations,
+} from "./db";
+import { getSoundUrl } from "./storage";
+import {
+  dealWithSignInResult,
+  getUserId,
+  observeAuthState,
+  trySignIn,
+} from "./auth";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyDo_kDcXO4GbWj1kWKOiysvTMxUC_yBGww",
-  authDomain: "wordbook-97332.firebaseapp.com",
-  projectId: "wordbook-97332",
-  storageBucket: "wordbook-97332.appspot.com",
-  messagingSenderId: "644486422189",
-  appId: "1:644486422189:web:5517d777d6e00dbef23024",
-  measurementId: "G-GQKDTJ3TKG",
+export const useFirebase = () => {
+  return {
+    getUserId,
+    observeAuthState,
+    trySignIn,
+    dealWithSignInResult,
+    createUser,
+    getUser,
+    getWords,
+    getEvaluations,
+    setEvaluations,
+    getSoundUrl,
+  };
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-export const db = getFirestore();
+export type Firebase = ReturnType<typeof useFirebase>;
+
+// export const batchSetWords = async () => {
+//   console.log(json);
+//   const batch = writeBatch(db);
+//   json.forEach((data) => {
+//     const newWord = {
+//       ...data,
+//       no: Number(data.no),
+//       sub_no: Number(data.sub_no),
+//     };
+//     console.log(newWord);
+//     const newWordRef = doc(collection(db, "words"));
+//     batch.set(newWordRef, newWord);
+//   });
+//   await batch.commit();
+//   console.log("fihished batch");
+// };
