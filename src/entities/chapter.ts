@@ -1,6 +1,6 @@
 import { Chapter } from "~/firebase/types";
 
-export type ChapterJa = "助走" | "加速" | "飛躍" | "頂点" | "重要" | "多義";
+export type ChapterJa = "助走" | "加速" | "飛躍" | "頂点" | "重要語" | "多義語";
 
 export const chapters: Chapter[] = [
   "Beginning",
@@ -16,6 +16,6 @@ export const chapterMap: Record<Chapter, ChapterJa> = {
   Acceleration: "加速",
   Leap: "飛躍",
   Top: "頂点",
-  Important: "重要",
-  Multiple: "多義",
+  Important: "重要語",
+  Multiple: "多義語",
 };
