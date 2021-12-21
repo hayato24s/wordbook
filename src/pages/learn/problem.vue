@@ -1,11 +1,20 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 import Button from "~/components/Button.vue";
 import EvaluationButton from "~/components/EvaluationButton.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Question from "~/components/Question.vue";
-import { Word } from "~/firebase/types";
+import { Evaluation, Word } from "~/firebase/types";
+import { usePorts } from "~/usecases";
+import { filterWords } from "~/usecases/filterWords";
+import { getEvaluations } from "~/usecases/getEvaluations";
+import { getUser } from "~/usecases/getUser";
+import { getWords } from "~/usecases/getWords";
+import { updateEvaluations } from "~/usecases/updateEvaluations";
+import { useFilterForLearning } from "~/usecases/useFilterForLearning";
+import { shuffleArray } from "~/utils";
 
 export default defineComponent({
   name: "Problem",
@@ -16,45 +25,40 @@ export default defineComponent({
     IconButton,
     Question,
   },
-  setup() {
+  async setup() {
+    const ports = usePorts();
+    const router = useRouter();
+    const { uid: userId } = await getUser(ports);
+    const words = await getWords(ports);
+    const evaluations = await getEvaluations(ports, userId);
+    const { filterForLearning: filter } = useFilterForLearning(ports);
+    const filteredWords = filterWords(words, evaluations, filter.value);
+    // BUG: words が 0 のとき
+    if (filteredWords.length === 0) router.push("/learn");
+    shuffleArray(filteredWords);
+
+    const index = ref(0);
+    const word = computed<Word>(() => filteredWords[index.value]);
     const showAnswer = ref(false);
 
-    const handleClick = () => {
-      console.log("clicked");
+    const goToNext = () => {
+      if (index.value === filteredWords.length - 1) router.push("/learn");
+      else {
+        index.value++;
+        showAnswer.value = false;
+      }
     };
 
-    const word1: Word = {
-      id: "uuid 001",
-      no: 1,
-      sub_no: 0,
-      chapter: "Beginning",
-      japanese: "'とにかく'やってみよう",
-      english: [
-        {
-          value: "Let's",
-          beginning: "",
-          end: "",
-          is_answer: false,
-        },
-        {
-          value: "try",
-          beginning: "",
-          end: "",
-          is_answer: false,
-        },
-        {
-          value: "anyway",
-          beginning: "",
-          end: ".",
-          is_answer: true,
-        },
-      ],
+    const changeEvaluation = async (newEval: Evaluation) => {
+      updateEvaluations(ports, userId, { [word.value.id]: newEval });
+      goToNext();
     };
 
     return {
+      word,
       showAnswer,
-      word1,
-      handleClick,
+      goToNext,
+      changeEvaluation,
     };
   },
 });
@@ -65,7 +69,7 @@ export default defineComponent({
     <Header>
       <template #left-btn>
         <IconButton
-          @click="$router.push('/')"
+          @click="$router.back()"
           size="small"
           color="black"
           iconName="back"
@@ -76,7 +80,7 @@ export default defineComponent({
     <div class="main">
       <Question
         class="main__question"
-        :word="word1"
+        :word="word"
         :showHeader="showAnswer"
         :showAnswer="showAnswer"
       />
@@ -85,9 +89,9 @@ export default defineComponent({
           >Show Answer</Button
         >
         <template v-if="showAnswer">
-          <EvaluationButton evaluation="Excellent" />
-          <EvaluationButton evaluation="Good" />
-          <EvaluationButton evaluation="Poor" />
+          <EvaluationButton @click="changeEvaluation" evaluation="Excellent" />
+          <EvaluationButton @click="changeEvaluation" evaluation="Good" />
+          <EvaluationButton @click="changeEvaluation" evaluation="Poor" />
         </template>
       </div>
     </div>

@@ -3,11 +3,12 @@ import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
   name: "GrayFilter",
+  emits: ["click"],
 });
 </script>
 
 <template>
-  <div class="gray-filter"></div>
+  <div @click="$emit('click')" class="gray-filter"></div>
 </template>
 
 <style lang="scss" scoped>

@@ -1,6 +1,6 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
-import { DisplayedSentence } from "~/entities/word";
+import { DisplaySentence } from "~/entities/word";
 import Character from "~/components/Character.vue";
 import { Context } from "vm";
 
@@ -20,13 +20,13 @@ export default defineComponent({
   },
   props: {
     sentence: {
-      type: Array as PropType<DisplayedSentence>,
+      type: Array as PropType<DisplaySentence>,
       required: true,
     },
   },
-  setup({ sentence }) {
+  setup(props) {
     const width = computed(() => {
-      const text = sentence.reduce((text, { char }) => {
+      const text = props.sentence.reduce((text, { char }) => {
         text += char;
         return text;
       }, "");

@@ -8,7 +8,7 @@ import { zeroPadding } from "~/utils";
 import { Chapter, Evaluation } from "~/firebase/types";
 
 export default defineComponent({
-  name: "WordList",
+  name: "WordListItem",
   components: {
     Face,
     IconButton,
@@ -39,39 +39,49 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ["click-face", "click-arrow"],
-  setup(props) {
+  emits: ["click", "click-face", "click-arrow"],
+  setup(props, { emit }) {
     const digit = computed(() =>
       props.chapter === "Multiple" ? 2 : props.no < 1000 ? 3 : 4
     );
+
+    const handleClick = (e: any) => {
+      if (!e.path.every((p: any) => p.className != "word-list-item__right"))
+        return;
+      emit("click");
+    };
 
     return {
       digit,
       formatSubNo,
       chapterMap,
       zeroPadding,
+      handleClick,
     };
   },
 });
 </script>
 
 <template>
-  <div :class="{ 'word-list': true, '--active': isActive }">
-    <div class="word-list__left">
-      <div class="word-list__text">
+  <div
+    @click="handleClick"
+    :class="{ 'word-list-item': true, '--active': isActive }"
+  >
+    <div class="word-list-item__left">
+      <div class="word-list-item__text">
         {{ chapterMap[chapter] }}
       </div>
-      <div class="word-list__text">
+      <div class="word-list-item__text">
         {{ zeroPadding(no, digit) }}
       </div>
-      <div v-if="subNo !== 0" class="word-list__text">-</div>
-      <div v-if="subNo !== 0" class="word-list__text">
+      <div v-if="subNo !== 0" class="word-list-item__text">-</div>
+      <div v-if="subNo !== 0" class="word-list-item__text">
         {{ formatSubNo(subNo) }}
       </div>
-      <div class="word-list__text">-</div>
-      <div class="word-list__text">{{ word }}</div>
+      <div class="word-list-item__text">-</div>
+      <div class="word-list-item__text">{{ word }}</div>
     </div>
-    <div class="word-list__right">
+    <div class="word-list-item__right">
       <Face @click="$emit('click-face')" :name="evaluation" />
       <IconButton
         @click="$emit('click-arrow')"
@@ -86,13 +96,13 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "~/scss/main.scss";
 
-.word-list {
+.word-list-item {
   width: 100%;
   height: 4.8rem;
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: stretch;
 
   padding: 0 1.6rem;
 
@@ -104,6 +114,7 @@ export default defineComponent({
     display: grid;
     grid-auto-flow: column;
     gap: 0.6rem;
+    align-items: center;
     font-size: 1.6rem;
   }
 
@@ -111,6 +122,7 @@ export default defineComponent({
     display: grid;
     grid-auto-flow: column;
     gap: 1.2rem;
+    align-items: center;
   }
 }
 </style>

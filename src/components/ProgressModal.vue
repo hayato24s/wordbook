@@ -36,6 +36,8 @@ export default defineComponent({
   max-width: 40rem;
   padding: 2.4rem;
 
+  @include center-fixed;
+
   background: $white;
 
   border: 1px solid $black;

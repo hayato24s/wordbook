@@ -1,10 +1,15 @@
 <script lang="ts">
 import { defineComponent, PropType, computed } from "@vue/runtime-core";
 import { zeroPadding } from "~/utils";
-import { englishToDisplay, japaneseToDislay } from "~/entities/word";
+import {
+  englishSentenceToDisplay,
+  formatNo,
+  formatSubNo,
+  japaneseToDislay,
+} from "~/entities/word";
 import Character from "./Character.vue";
 import Sentence from "./Sentence.vue";
-import { Word } from "~/firebase/types";
+import { Chapter, Word } from "~/firebase/types";
 import { chapterMap } from "~/entities/chapter";
 
 export default defineComponent({
@@ -14,7 +19,20 @@ export default defineComponent({
     Sentence,
   },
   props: {
+    // no: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // subNo: {
+    //   type: Number,
+    //   required: true,
+    // },
+    // chapter: {
+    //   type: String as PropType<Chapter>,
+    //   required: true,
+    // },
     word: {
+      // refactor: word に依存しない
       type: Object as PropType<Word>,
       required: true,
     },
@@ -28,13 +46,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const no = computed(() =>
-      zeroPadding(props.word.no, props.word.no < 1000 ? 3 : 4)
-    );
-    const chapter = computed(() => chapterMap[props.word.chapter]);
-    const header = computed(() => `${chapter.value}    No.${no.value}`);
+    const header = computed(() => {
+      const no = formatNo(props.word.no, props.word.chapter);
+      const chapter = chapterMap[props.word.chapter];
+      let ret = `${chapter} No.${no}`;
+      if (props.word.chapter === "Multiple") {
+        ret += ` - ${formatSubNo(props.word.sub_no)}`;
+      }
+      return ret;
+    });
     const english = computed(() =>
-      englishToDisplay(props.word.english, props.showAnswer)
+      englishSentenceToDisplay(props.word.english.sentence, props.showAnswer)
     );
     const japanese = computed(() => japaneseToDislay(props.word.japanese));
 

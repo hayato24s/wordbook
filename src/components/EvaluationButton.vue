@@ -16,7 +16,10 @@ export default defineComponent({
 </script>
 
 <template>
-  <div :class="`evaluation-button --${evaluation.toLowerCase()}`">
+  <div
+    @click="$emit('click', evaluation)"
+    :class="`evaluation-button --${evaluation.toLowerCase()}`"
+  >
     {{ evaluation }}
   </div>
 </template>

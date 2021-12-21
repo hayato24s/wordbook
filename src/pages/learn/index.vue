@@ -1,12 +1,18 @@
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
 import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Table from "~/components/Table.vue";
-import { chapters } from "~/entities/chapter";
-import { evaluations } from "~/entities/evaluation";
 import { Chapter, Evaluation } from "~/firebase/types";
+import { usePorts } from "~/usecases";
+import { filterWords } from "~/usecases/filterWords";
+import { getEvaluations } from "~/usecases/getEvaluations";
+import { getUser } from "~/usecases/getUser";
+import { getWords } from "~/usecases/getWords";
+import { useFilterForLearning } from "~/usecases/useFilterForLearning";
+import { cloneDeep } from "~/utils";
 
 export default defineComponent({
   name: "Learn",
@@ -16,16 +22,15 @@ export default defineComponent({
     IconButton,
     Table,
   },
-  setup() {
-    const filter = reactive<Record<Chapter, Record<Evaluation, boolean>>>(
-      chapters.reduce((obj1, chapter) => {
-        obj1[chapter] = evaluations.reduce((obj2, evaluation) => {
-          obj2[evaluation] = false;
-          return obj2;
-        }, {} as Record<Evaluation, boolean>);
-        return obj1;
-      }, {} as Record<Chapter, Record<Evaluation, boolean>>)
-    );
+  async setup() {
+    const ports = usePorts();
+    const router = useRouter();
+
+    const { uid: userId } = await getUser(ports);
+    const words = await getWords(ports);
+    const evaluations = await getEvaluations(ports, userId);
+    const { filterForLearning: filter, setFilterForLearning: setFilter } =
+      useFilterForLearning(ports);
 
     const updateFilter = ({
       chapter,
@@ -34,17 +39,21 @@ export default defineComponent({
       chapter: Chapter;
       evaluation: Evaluation;
     }) => {
-      filter[chapter][evaluation] = !filter[chapter][evaluation];
+      const newFilter = cloneDeep(filter.value);
+      newFilter[chapter][evaluation] = !filter.value[chapter][evaluation];
+      setFilter(newFilter);
     };
 
-    const handleClick = () => {
-      console.log("clicked");
+    const start = () => {
+      const filteredWords = filterWords(words, evaluations, filter.value);
+      if (filteredWords.length === 0) return;
+      router.push("/learn/problem");
     };
 
     return {
       filter,
       updateFilter,
-      handleClick,
+      start,
     };
   },
 });
@@ -68,7 +77,7 @@ export default defineComponent({
         <div class="main__text">タップして出題範囲を選択</div>
         <Table @update:filter="updateFilter" :filter="filter" />
       </div>
-      <Button @click="handleClick()">Start !</Button>
+      <Button @click="start">Start !</Button>
     </div>
   </div>
 </template>

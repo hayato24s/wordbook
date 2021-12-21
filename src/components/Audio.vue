@@ -12,33 +12,44 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    continuous: {
+      type: Boolean,
+      required: true,
+    },
   },
   components: {
     AudioBar,
     IconButton,
     SvgWrapper,
   },
-  emits: ["change"],
+  emits: ["change", "update:continuous"],
   setup(props, { emit }) {
     const audio = new Audio();
     const duration = ref(0);
     const currentTime = ref(0);
     const isPlay = ref(false);
-    const continuous = ref(false);
 
     watch(
       () => props.src,
       (src) => {
-        audio.src = props.src;
+        audio.src = src;
         audio.load();
       },
       { immediate: true }
     );
 
-    // audio.currentTime が変更されるもしくは src が変更されるたび実行される.
+    watch(
+      () => props.continuous,
+      (continuous) => {
+        if (continuous) play();
+        else pause();
+      }
+    );
+
+    // audio.currentTime が変更される（3秒スキップ）もしくは src が変更されるたび実行される.
     audio.oncanplay = () => {
       duration.value = audio.duration;
-      if (continuous.value) play();
+      if (props.continuous) play();
     };
 
     // audio.currentTime が変更されるたびに currentTime を更新する.
@@ -51,10 +62,11 @@ export default defineComponent({
     };
 
     const play = () => {
+      if (props.src === "") return;
       if (audio.currentTime === audio.duration) return;
+      emit("update:continuous", true);
       audio.play();
       isPlay.value = true;
-      continuous.value = true;
     };
 
     const pause = () => {

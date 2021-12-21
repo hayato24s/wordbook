@@ -1,12 +1,15 @@
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
+import { useRouter } from "vue-router";
 import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Table from "~/components/Table.vue";
-import { chapters } from "~/entities/chapter";
-import { evaluations } from "~/entities/evaluation";
+import { createFilter, Filter } from "~/entities/filter";
 import { Chapter, Evaluation } from "~/firebase/types";
+import { usePorts } from "~/usecases";
+import { useFilterForListening } from "~/usecases/useFilterForListening";
+import { cloneDeep } from "~/utils";
 
 export default defineComponent({
   name: "Filter",
@@ -17,15 +20,15 @@ export default defineComponent({
     Table,
   },
   setup() {
-    const filter = reactive<Record<Chapter, Record<Evaluation, boolean>>>(
-      chapters.reduce((obj1, chapter) => {
-        obj1[chapter] = evaluations.reduce((obj2, evaluation) => {
-          obj2[evaluation] = false;
-          return obj2;
-        }, {} as Record<Evaluation, boolean>);
-        return obj1;
-      }, {} as Record<Chapter, Record<Evaluation, boolean>>)
-    );
+    const ports = usePorts();
+    const router = useRouter();
+
+    const {
+      filterForListening: storedFilter,
+      setFilterForListening: setFilter,
+    } = useFilterForListening(ports);
+
+    const filter = ref<Filter>(cloneDeep(storedFilter.value));
 
     const updateFilter = ({
       chapter,
@@ -34,17 +37,19 @@ export default defineComponent({
       chapter: Chapter;
       evaluation: Evaluation;
     }) => {
-      filter[chapter][evaluation] = !filter[chapter][evaluation];
+      filter.value[chapter][evaluation] = !filter.value[chapter][evaluation];
     };
 
-    const handleClick = () => {
-      console.log("clicked");
+    const save = () => {
+      setFilter(filter.value);
+      filter.value = cloneDeep(storedFilter.value);
+      router.push("/listen");
     };
 
     return {
       filter,
       updateFilter,
-      handleClick,
+      save,
     };
   },
 });
@@ -68,7 +73,7 @@ export default defineComponent({
         <div class="main__text">タップして出題範囲を選択</div>
         <Table @update:filter="updateFilter" :filter="filter" />
       </div>
-      <Button @click="handleClick()">Save</Button>
+      <Button @click="save">Save</Button>
     </div>
   </div>
 </template>
