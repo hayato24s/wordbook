@@ -29,20 +29,3 @@ export const useFirebase = () => {
 };
 
 export type Firebase = ReturnType<typeof useFirebase>;
-
-// export const batchSetWords = async () => {
-//   console.log(json);
-//   const batch = writeBatch(db);
-//   json.forEach((data) => {
-//     const newWord = {
-//       ...data,
-//       no: Number(data.no),
-//       sub_no: Number(data.sub_no),
-//     };
-//     console.log(newWord);
-//     const newWordRef = doc(collection(db, "words"));
-//     batch.set(newWordRef, newWord);
-//   });
-//   await batch.commit();
-//   console.log("fihished batch");
-// };

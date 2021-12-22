@@ -5,6 +5,7 @@ import {
   getDocs,
   getFirestore,
   setDoc,
+  writeBatch,
 } from "firebase/firestore";
 import { firebaseApp } from "./app";
 import {
@@ -51,4 +52,22 @@ export const setEvaluations = async (
     evaluationsConverter
   );
   setDoc(evalRef, changes, { merge: true });
+};
+
+export const batchSetWords = async (json: any) => {
+  console.log("start batch");
+  const batch = writeBatch(db);
+  json.forEach((data: any) => {
+    const newWordRef = doc(collection(db, "words"));
+    const newWord = {
+      ...data,
+      id: newWordRef.id,
+      no: Number(data.no),
+      sub_no: Number(data.sub_no),
+    };
+    console.log(newWord);
+    batch.set(newWordRef, newWord);
+  });
+  await batch.commit();
+  console.log("fihished batch");
 };

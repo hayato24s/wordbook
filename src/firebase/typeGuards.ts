@@ -13,11 +13,19 @@ import {
 } from "./types";
 
 export const userTypeGuard = (user: any): user is User => {
-  if (!checkObjectHasProperty<User>(user, ["uid", "name", "permission"]))
+  if (
+    !checkObjectHasProperty<User>(user, [
+      "uid",
+      "name",
+      "photoUrl",
+      "permission",
+    ])
+  )
     return false;
 
   if (!checkType(user.uid, "string")) return false;
   if (!checkType(user.name, "string")) return false;
+  if (!checkType(user.photoUrl, "string")) return false;
   if (!checkType(user.permission, "boolean")) return false;
 
   return true;

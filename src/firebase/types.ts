@@ -1,4 +1,9 @@
-export type User = { uid: string; name: string; permission: boolean };
+export type User = {
+  uid: string;
+  name: string;
+  photoUrl: string;
+  permission: boolean;
+};
 
 export type Chapter =
   | "Beginning"

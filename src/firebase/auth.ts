@@ -6,6 +6,7 @@ import {
   signInWithRedirect,
 } from "firebase/auth";
 import { Provider } from "~/entities/provider";
+import { User } from "./types";
 
 const auth = getAuth();
 
@@ -32,7 +33,9 @@ export const trySignIn = (prov: Provider) => {
 };
 
 export const dealWithSignInResult = async (
-  successfulCallback: (result: { uid: string; name: string }) => Promise<void>,
+  successfulCallback: (
+    result: Pick<User, "uid" | "name" | "photoUrl">
+  ) => Promise<void>,
   failedCallback: () => Promise<void>
 ) => {
   await getRedirectResult(auth).then(async (result) => {
@@ -40,6 +43,7 @@ export const dealWithSignInResult = async (
       await successfulCallback({
         uid: result.user.uid,
         name: result.user.displayName ?? "",
+        photoUrl: result.user.photoURL ?? "",
       });
     else await failedCallback();
   });
