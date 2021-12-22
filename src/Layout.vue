@@ -46,7 +46,7 @@ export default defineComponent({
             async () => {
               // no result
 
-              router.push("/login");
+              await router.push("/login");
             }
           );
         }
@@ -56,7 +56,7 @@ export default defineComponent({
       async () => {
         // not pass firebase auth
 
-        router.push("/login");
+        await router.push("/login");
         loading.value = false;
       }
     );
