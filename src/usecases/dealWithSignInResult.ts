@@ -2,7 +2,8 @@ import { Ports } from "~/adapter";
 
 export const dealWithSignInResult = async (
   { firebase }: Ports,
-  callback: (result: { uid: string; name: string }) => Promise<void>
+  successfulCallback: (result: { uid: string; name: string }) => Promise<void>,
+  failedCallback: () => Promise<void>
 ) => {
-  firebase.dealWithSignInResult(callback);
+  await firebase.dealWithSignInResult(successfulCallback, failedCallback);
 };

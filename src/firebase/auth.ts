@@ -14,14 +14,14 @@ export const getUserId = () => {
 };
 
 export const observeAuthState = (
-  authorizedCallback: () => void,
-  unauthorizedCallback: () => void
+  authorizedCallback: () => Promise<void>,
+  unauthorizedCallback: () => Promise<void>
 ) => {
   onAuthStateChanged(auth, async (authUser) => {
     if (authUser) {
-      authorizedCallback();
+      await authorizedCallback();
     } else {
-      unauthorizedCallback();
+      await unauthorizedCallback();
     }
   });
 };
@@ -32,12 +32,15 @@ export const trySignIn = (prov: Provider) => {
 };
 
 export const dealWithSignInResult = async (
-  callback: (result: { uid: string; name: string }) => Promise<void>
+  successfulCallback: (result: { uid: string; name: string }) => Promise<void>,
+  failedCallback: () => Promise<void>
 ) => {
-  getRedirectResult(auth).then(async (result) => {
-    if (!result) return;
-    const uid = result.user.uid;
-    const name = result.user.displayName ?? "";
-    await callback({ uid, name });
+  await getRedirectResult(auth).then(async (result) => {
+    if (result)
+      await successfulCallback({
+        uid: result.user.uid,
+        name: result.user.displayName ?? "",
+      });
+    else await failedCallback();
   });
 };

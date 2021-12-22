@@ -1,10 +1,13 @@
 <script lang="ts">
 // This starter template is using Vue 3 <script setup> SFCs
 // Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { defineComponent } from "@vue/runtime-core";
+import { defineComponent } from "vue";
+import Layout from "~/Layout.vue";
 
 export default defineComponent({
-  components: {},
+  components: {
+    Layout,
+  },
   setup() {
     console.log("app");
   },
@@ -14,10 +17,9 @@ export default defineComponent({
 <template>
   <Suspense>
     <template #default>
-      <router-view />
-    </template>
-    <template #fallback>
-      <div class="loading">...Loading</div>
+      <Layout>
+        <router-view />
+      </Layout>
     </template>
   </Suspense>
 </template>
