@@ -1,13 +1,13 @@
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDo_kDcXO4GbWj1kWKOiysvTMxUC_yBGww",
-  authDomain: "wordbook-97332.firebaseapp.com",
-  projectId: "wordbook-97332",
-  storageBucket: "wordbook-97332.appspot.com",
-  messagingSenderId: "644486422189",
-  appId: "1:644486422189:web:5517d777d6e00dbef23024",
-  measurementId: "G-GQKDTJ3TKG",
+  apiKey: import.meta.env.VITE_API_KEY,
+  authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_MESSAGING_SENDERID,
+  appId: import.meta.env.VITE_APP_ID,
+  measurementId: import.meta.env.VITE_MEASUREMENT_ID,
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);

@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isUserAuthenticated(userId) {
+      return isAuthenticated() && userId == request.auth.uid;
+    }
+
+    // Check User Schema
+    function isValidUser(user) {
+      return user.size() == 5
+      && 'uid' in user && user.uid is string
+      && 'name' in user && user.name is string
+      && 'photoUrl' in user && user.photoUrl is string
+      && 'permission' in user && user.permission is bool
+      && 'created' in user && user.created is timestamp
+    }
+
+    match /users/{userId} {
+      allow get: if isUserAuthenticated(userId);
+      allow create: if isUserAuthenticated(userId)
+      && isValidUser(request.resource.data)
+      && request.resource.data.uid == userId
+      && request.resource.data.created == request.time;
+    }
+
+    match /words/{wordId} {
+      allow list: if isAuthenticated()
+      && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.permission;
+    }
+
+    match /evaluations/{userId} {
+      allow get: if isUserAuthenticated(userId);
+      allow create, update: if isUserAuthenticated(userId)
+      && request.resource.data.values().hasOnly(["Excellent","Good","Poor","NotLearned"]);
+    }
+  }
+}
