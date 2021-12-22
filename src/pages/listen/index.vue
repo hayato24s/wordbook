@@ -68,6 +68,7 @@ export default defineComponent({
     };
     const changeAudio = async (newIndex: number, newContinuous = true) => {
       if (length.value === 0) return;
+      showAnswer.value = false;
       index.value = clamp(newIndex, 0, filteredWords.value.length - 1);
       src.value = await getSrc();
       continuous.value = newContinuous;

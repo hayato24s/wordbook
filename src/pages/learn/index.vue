@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent } from "vue";
+import { computed, defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
@@ -31,6 +31,9 @@ export default defineComponent({
     const evaluations = await getEvaluations(ports, userId);
     const { filterForLearning: filter, setFilterForLearning: setFilter } =
       useFilterForLearning(ports);
+    const count = computed(
+      () => filterWords(words, evaluations, filter.value).length
+    );
 
     const updateFilter = ({
       chapter,
@@ -45,12 +48,12 @@ export default defineComponent({
     };
 
     const start = () => {
-      const filteredWords = filterWords(words, evaluations, filter.value);
-      if (filteredWords.length === 0) return;
+      if (count.value === 0) return;
       router.push("/learn/problem");
     };
 
     return {
+      count,
       filter,
       updateFilter,
       start,
@@ -74,10 +77,14 @@ export default defineComponent({
     </Header>
     <div class="main">
       <div class="main__table">
-        <div class="main__text">タップして出題範囲を選択</div>
+        <div class="main__text">
+          タップして出題範囲を選択 <br /><span :class="{ '--red': count === 0 }"
+            >該当数 {{ count }} 問</span
+          >
+        </div>
         <Table @update:filter="updateFilter" :filter="filter" />
       </div>
-      <Button @click="start">Start !</Button>
+      <Button @click="start" :disabled="count === 0">Start</Button>
     </div>
   </div>
 </template>
@@ -100,8 +107,14 @@ export default defineComponent({
   align-items: center;
 
   &__text {
-    margin-bottom: 2.4rem;
+    margin-bottom: 0.8rem;
     font-size: 1.6rem;
+    text-align: center;
+    line-height: 2.8rem;
+
+    .--red {
+      color: $pale-red;
+    }
   }
 
   &__table {
