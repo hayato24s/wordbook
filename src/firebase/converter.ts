@@ -1,4 +1,8 @@
-import { DocumentData, FirestoreDataConverter } from "firebase/firestore";
+import {
+  DocumentData,
+  FirestoreDataConverter,
+  serverTimestamp,
+} from "firebase/firestore";
 import {
   evaluationMapTypeGuard,
   userTypeGuard,
@@ -8,7 +12,10 @@ import { EvaluationMap, User, Word } from "./types";
 
 export const userConverter: FirestoreDataConverter<User> = {
   toFirestore: (user: User): DocumentData => {
-    return user;
+    return {
+      ...user,
+      created: serverTimestamp(),
+    };
   },
   fromFirestore: (snapshot, options): User => {
     const user = snapshot.data(options);
