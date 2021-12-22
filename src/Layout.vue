@@ -31,10 +31,15 @@ export default defineComponent({
 
           await dealWithSignInResult(
             ports,
-            async ({ uid, name }) => {
+            async ({ uid, name, photoUrl }) => {
               // creat user data in firestore
 
-              await createUser(ports, { uid, name, permission: true });
+              await createUser(ports, {
+                uid,
+                name,
+                photoUrl,
+                permission: true,
+              });
               await createEvaluations(ports, uid);
               router.push("/");
             },

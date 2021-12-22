@@ -61,15 +61,15 @@ export default defineComponent({
   justify-items: center;
   align-items: center;
   grid-template:
-    "..." 14%
-    "header" 6%
-    "..." 6%
-    "msg" 10%
-    "..." 12%
-    "sign-in" 6%
-    "..." 4%
-    "btns" 1fr
-    "..." 20%
+    "..." 1fr
+    "header" auto
+    "..." 6rem
+    "msg" auto
+    "..." 8rem
+    "sign-in" auto
+    "..." 1.2rem
+    "btns" 2fr
+    "..." 1fr
     / 100%;
 
   &__header {

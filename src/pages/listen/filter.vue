@@ -1,11 +1,11 @@
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import Button from "~/components/Button.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
 import Table from "~/components/Table.vue";
-import { createFilter, Filter } from "~/entities/filter";
+import { Filter } from "~/entities/filter";
 import { Chapter, Evaluation } from "~/firebase/types";
 import { usePorts } from "~/usecases";
 import { useFilterForListening } from "~/usecases/useFilterForListening";
@@ -71,7 +71,7 @@ export default defineComponent({
     <div class="main">
       <div class="main__table">
         <div class="main__text">タップして出題範囲を選択</div>
-        <Table @update:filter="updateFilter" :filter="filter" />
+        <Table @update:data="updateFilter" :data="filter" />
       </div>
       <Button @click="save">Save</Button>
     </div>

@@ -82,7 +82,7 @@ export default defineComponent({
             >該当数 {{ count }} 問</span
           >
         </div>
-        <Table @update:filter="updateFilter" :filter="filter" />
+        <Table @update:data="updateFilter" :data="filter" />
       </div>
       <Button @click="start" :disabled="count === 0">Start</Button>
     </div>

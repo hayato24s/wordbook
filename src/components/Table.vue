@@ -1,9 +1,10 @@
 <script lang="ts">
-import { defineComponent, PropType } from "@vue/runtime-core";
+import { defineComponent, PropType, computed } from "@vue/runtime-core";
 import { evaluations } from "~/entities/evaluation";
 import { chapterMap, chapters } from "~/entities/chapter";
 import CheckBox from "~/components/CheckBox.vue";
 import Face from "~/components/Face.vue";
+import { Filter } from "~/entities/filter";
 import { Chapter, Evaluation } from "~/firebase/types";
 
 export default defineComponent({
@@ -13,12 +14,14 @@ export default defineComponent({
     Face,
   },
   props: {
-    filter: {
-      type: Object as PropType<Record<Chapter, Record<Evaluation, boolean>>>,
+    data: {
+      type: Object as PropType<
+        Filter | Record<Chapter, Record<Evaluation, number>>
+      >,
       required: true,
     },
   },
-  emits: ["update:filter"],
+  emits: ["update:data"],
   setup() {
     return {
       evaluations,
@@ -43,10 +46,15 @@ export default defineComponent({
       </div>
       <template v-for="(evaluation, j) in evaluations" :key="i * 4 + j">
         <div
-          @click="$emit('update:filter', { chapter, evaluation })"
+          @click="$emit('update:data', { chapter, evaluation })"
           class="table__data"
         >
-          <CheckBox :checked="filter[chapter][evaluation]" />
+          <template v-if="typeof data[chapter][evaluation] === 'boolean'">
+            <CheckBox :checked="(data[chapter][evaluation] as boolean)" />
+          </template>
+          <template v-else>
+            {{ data[chapter][evaluation] }}
+          </template>
         </div>
       </template>
     </template>
