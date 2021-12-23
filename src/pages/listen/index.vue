@@ -62,11 +62,7 @@ export default defineComponent({
     /** audio */
     const getSrc = async () => {
       if (length.value === 0) return "";
-      return getSoundUrl(ports, {
-        no: filteredWords.value[index.value].no,
-        sub_no: filteredWords.value[index.value].sub_no,
-        chapter: filteredWords.value[index.value].chapter,
-      });
+      return getSoundUrl(ports, currentWord.value.id);
     };
     const changeAudio = async (newIndex: number, newContinuous = true) => {
       if (length.value === 0) return;
@@ -112,6 +108,19 @@ export default defineComponent({
       evaluations.value[modalWordId.value] = evaluation;
       modalWordId.value = "";
     };
+
+    // preload sound url
+    watch(
+      () => index.value,
+      (i) => {
+        if (length.value === 0) return;
+        const j = clamp(i + 5, i, length.value);
+        while (i < j) {
+          getSoundUrl(ports, filteredWords.value[i].id);
+          i++;
+        }
+      }
+    );
 
     watch(
       () => modalWordId.value,
