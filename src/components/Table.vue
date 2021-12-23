@@ -1,11 +1,12 @@
 <script lang="ts">
-import { defineComponent, PropType, computed } from "@vue/runtime-core";
+import { defineComponent, PropType } from "@vue/runtime-core";
 import { evaluations } from "~/entities/evaluation";
 import { chapterMap, chapters } from "~/entities/chapter";
 import CheckBox from "~/components/CheckBox.vue";
 import Face from "~/components/Face.vue";
 import { Filter } from "~/entities/filter";
 import { Chapter, Evaluation } from "~/firebase/types";
+import { StyleValue } from "vue";
 
 export default defineComponent({
   name: "Table",
@@ -22,8 +23,16 @@ export default defineComponent({
     },
   },
   emits: ["update:data"],
-  setup() {
+  setup(props) {
+    const isFilter = typeof props.data["Beginning"]["NotLearned"] == "boolean";
+    const styles = {
+      userSelect: "none",
+      cursor: isFilter ? "pointer" : "auto",
+    } as StyleValue;
+
     return {
+      isFilter,
+      styles,
       evaluations,
       chapters,
       chapterMap,
@@ -48,8 +57,9 @@ export default defineComponent({
         <div
           @click="$emit('update:data', { chapter, evaluation })"
           class="table__data"
+          :style="styles"
         >
-          <template v-if="typeof data[chapter][evaluation] === 'boolean'">
+          <template v-if="isFilter">
             <CheckBox :checked="(data[chapter][evaluation] as boolean)" />
           </template>
           <template v-else>
@@ -79,7 +89,6 @@ export default defineComponent({
 
   &__data {
     background: $white;
-    @include button-cursor;
     @include center-flex;
   }
 }
