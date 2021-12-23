@@ -22,4 +22,7 @@ export const mutations: MutationTree<State> = {
   setFilterForListening(state, filter: Filter) {
     state.filterForListening = filter;
   },
+  saveSoundUrl(state, { id, url }: { id: string; url: string }) {
+    state.soundUrls[id] = url;
+  },
 };

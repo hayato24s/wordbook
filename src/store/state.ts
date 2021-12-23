@@ -7,6 +7,7 @@ export interface State {
   evaluations: EvaluationMap | undefined;
   filterForLearning: Filter;
   filterForListening: Filter;
+  soundUrls: Record<string, string>;
 }
 
 export const initState: State = {
@@ -15,4 +16,5 @@ export const initState: State = {
   evaluations: undefined,
   filterForLearning: createFilter(),
   filterForListening: createFilter(),
+  soundUrls: {},
 };
