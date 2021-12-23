@@ -17,7 +17,7 @@ export default defineComponent({
 
 .footer {
   width: 100%;
-  height: 4.8rem;
+  min-height: 4.8rem;
 
   display: flex;
   justify-content: space-around;

@@ -142,9 +142,9 @@ export default defineComponent({
 
 .audio {
   width: 100%;
+  max-width: 60rem;
 
   padding: 1.6rem 0 0.8rem;
-  border-top: solid 1px $black;
 
   &__btn {
     width: 100%;

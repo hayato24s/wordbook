@@ -3,6 +3,7 @@ import { computed, defineComponent, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Audio from "~/components/Audio.vue";
 import Button from "~/components/Button.vue";
+import Footer from "~/components/Footer.vue";
 import GrayFilter from "~/components/GrayFilter.vue";
 import Header from "~/components/Header.vue";
 import IconButton from "~/components/IconButton.vue";
@@ -28,6 +29,7 @@ export default defineComponent({
   components: {
     Audio,
     Button,
+    Footer,
     GrayFilter,
     Header,
     IconButton,
@@ -200,11 +202,14 @@ export default defineComponent({
       <Button @click="showAnswer = true">Show Answer</Button>
     </section>
 
-    <Audio
-      @change="(i) => changeAudio(index + i)"
-      :src="src"
-      v-model:continuous="continuous"
-    />
+    <Footer>
+      <Audio
+        @change="(i) => changeAudio(index + i)"
+        :src="src"
+        v-model:continuous="continuous"
+      />
+    </Footer>
+
     <GrayFilter @click="modalWordId = ''" v-show="modalWordId" />
     <ProgressModal v-show="modalWordId" @click="changeEvaluation" />
   </div>

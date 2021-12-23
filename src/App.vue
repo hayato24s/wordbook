@@ -8,9 +8,7 @@ export default defineComponent({
   components: {
     Layout,
   },
-  setup() {
-    console.log("app");
-  },
+  setup() {},
 });
 </script>
 
