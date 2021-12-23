@@ -93,7 +93,7 @@ export default defineComponent({
 @import "~/scss/main.scss";
 
 .learn {
-  height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }

@@ -55,7 +55,7 @@ export default defineComponent({
 @import "~/scss/main.scss";
 
 .login {
-  height: 100vh;
+  height: 100%;
 
   display: grid;
   justify-items: center;

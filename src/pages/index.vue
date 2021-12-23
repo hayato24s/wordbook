@@ -67,7 +67,8 @@ export default defineComponent({
 @import "~/scss/main.scss";
 
 .home {
-  height: 100vh;
+  height: 100%;
+  // height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -79,13 +80,13 @@ export default defineComponent({
   justify-items: center;
   align-items: center;
   grid-template:
-    "..." 1fr
+    "..." 2fr
     "img" auto
-    "..." 3.2rem
-    "text" auto
-    "..." 3.2rem
-    "table" auto
     "..." 1fr
+    "text" auto
+    "..." 1fr
+    "table" auto
+    "..." 2fr
     / 100%;
 
   &__img {

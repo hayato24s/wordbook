@@ -20,19 +20,20 @@ export default defineComponent({
     observeAuthState(
       ports,
       async () => {
-        // pass firebase auth
+        console.log("pass firebase auth");
 
         try {
           const permission = await checkPermission(ports);
-          // exists user data in firestore
+          console.log("exists user data in firestore");
+
           router.push("/");
         } catch (e) {
-          // not found user data in firestore
+          console.log("not found user data in firestore");
 
           await dealWithSignInResult(
             ports,
             async ({ uid, name, photoUrl }) => {
-              // creat user data in firestore
+              console.log("creat user data in firestore");
 
               await createUser(ports, {
                 uid,
@@ -44,7 +45,7 @@ export default defineComponent({
               router.push("/");
             },
             async () => {
-              // no result
+              console.log("no result");
 
               await router.push("/login");
             }
@@ -54,12 +55,20 @@ export default defineComponent({
         loading.value = false;
       },
       async () => {
-        // not pass firebase auth
+        console.log("not pass firebase auth");
 
         await router.push("/login");
         loading.value = false;
       }
     );
+
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    window.addEventListener("load", setVh);
+    window.addEventListener("resize", setVh);
 
     return {
       loading,
@@ -80,11 +89,14 @@ export default defineComponent({
 
 .layout {
   width: 100%;
-  height: 100vh;
 
   &__loading {
     font-size: 2.4rem;
     @include center-absolute;
+  }
+
+  &__article {
+    height: calc(var(--vh, 1vh) * 100);
   }
 }
 </style>
