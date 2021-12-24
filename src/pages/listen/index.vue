@@ -1,5 +1,5 @@
 <script lang="ts">
-import { computed, defineComponent, ref, watch } from "vue";
+import { computed, defineComponent, onMounted, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 import Audio from "~/components/Audio.vue";
 import Button from "~/components/Button.vue";
@@ -40,6 +40,19 @@ export default defineComponent({
   async setup() {
     const ports = usePorts();
     const router = useRouter();
+
+    /** word-list */
+    let wordListDom: HTMLElement | undefined = undefined;
+    let wordListBottom = 0;
+    let wordItemDoms: HTMLElement[] | undefined = undefined;
+    onMounted(() => {
+      wordListDom = document.getElementById("word-list") as HTMLElement;
+      wordListBottom = wordListDom.offsetTop + wordListDom.offsetHeight;
+      const children = wordListDom.children;
+      wordItemDoms = Array.from(children).filter((child) =>
+        child.classList.contains("word-list-item")
+      ) as HTMLElement[];
+    });
 
     const { uid: userId } = await getUser(ports);
     const words = await getWords(ports);
@@ -108,6 +121,20 @@ export default defineComponent({
       evaluations.value[modalWordId.value] = evaluation;
       modalWordId.value = "";
     };
+
+    /** scroll in word-list */
+    watch(
+      () => index.value,
+      () => {
+        if (!wordListDom || !wordItemDoms) return;
+        const el = wordItemDoms[index.value];
+        if (!el) return;
+        const bottom = el.offsetTop + el.offsetHeight;
+        if (wordListBottom < bottom) {
+          wordListDom.scrollTo(0, bottom - wordListBottom);
+        }
+      }
+    );
 
     // preload sound url
     watch(
@@ -184,7 +211,7 @@ export default defineComponent({
       </template>
     </Header>
 
-    <section v-if="!isDetail" class="word-list">
+    <section v-if="!isDetail" id="word-list" class="word-list">
       <template v-for="(word, i) in filteredWords" :key="word.id">
         <div v-if="i !== 0" class="word-list__border"></div>
         <WordListItem
