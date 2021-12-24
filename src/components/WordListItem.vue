@@ -56,11 +56,8 @@ export default defineComponent({
 </script>
 
 <template>
-  <div
-    @click="$emit('click')"
-    :class="{ 'word-list-item': true, '--active': isActive }"
-  >
-    <div class="word-list-item__left">
+  <div :class="{ 'word-list-item': true, '--active': isActive }">
+    <div @click="$emit('click')" class="word-list-item__left">
       <div class="word-list-item__text">
         {{ chapterMap[chapter] }}
       </div>
