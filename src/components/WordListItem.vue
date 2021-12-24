@@ -40,23 +40,16 @@ export default defineComponent({
     },
   },
   emits: ["click", "click-face", "click-arrow"],
-  setup(props, { emit }) {
+  setup(props) {
     const digit = computed(() =>
       props.chapter === "Multiple" ? 2 : props.no < 1000 ? 3 : 4
     );
-
-    const handleClick = (e: any) => {
-      if (!e.path.every((p: any) => p.className != "word-list-item__right"))
-        return;
-      emit("click");
-    };
 
     return {
       digit,
       formatSubNo,
       chapterMap,
       zeroPadding,
-      handleClick,
     };
   },
 });
@@ -64,7 +57,7 @@ export default defineComponent({
 
 <template>
   <div
-    @click="handleClick"
+    @click="$emit('click')"
     :class="{ 'word-list-item': true, '--active': isActive }"
   >
     <div class="word-list-item__left">
@@ -106,14 +99,19 @@ export default defineComponent({
 
   padding: 0 1.6rem;
 
+  @include button-cursor;
+
   &.--active {
     color: $bright-red;
   }
 
   &__left {
+    flex-grow: 1;
+
     display: grid;
     grid-auto-flow: column;
     gap: 0.6rem;
+    justify-content: start;
     align-items: center;
     font-size: 1.6rem;
   }

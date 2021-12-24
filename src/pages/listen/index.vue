@@ -56,11 +56,11 @@ export default defineComponent({
 
     const { uid: userId } = await getUser(ports);
     const words = await getWords(ports);
-    const evaluations = ref(await getEvaluations(ports, userId));
+    const evalMap = await getEvaluations(ports, userId);
     const { filterForListening: filter } = useFilterForListening(ports);
 
     const filteredWords = ref<Word[]>(
-      filterWords(words, evaluations.value, filter.value)
+      filterWords(words, evalMap, filter.value)
     );
     const length = computed(() => filteredWords.value.length);
 
@@ -114,11 +114,18 @@ export default defineComponent({
       continuous.value = false;
     };
 
+    /** word-list */
+    const clickWordItemArrow = (i: number) => {
+      changeAudio(i);
+      isDetail.value = true;
+    };
+
+    /** progress-modal */
     const changeEvaluation = async (evaluation: Evaluation) => {
       updateEvaluations(ports, userId, {
         [modalWordId.value]: evaluation,
       });
-      evaluations.value[modalWordId.value] = evaluation;
+      evalMap[modalWordId.value] = evaluation;
       modalWordId.value = "";
     };
 
@@ -136,7 +143,7 @@ export default defineComponent({
       }
     );
 
-    // preload sound url
+    /** preload sound url */
     watch(
       () => index.value,
       (i) => {
@@ -149,6 +156,7 @@ export default defineComponent({
       }
     );
 
+    /** progress modal */
     watch(
       () => modalWordId.value,
       (id) => {
@@ -157,7 +165,7 @@ export default defineComponent({
     );
 
     return {
-      evaluations,
+      evalMap,
       filteredWords,
       src,
       index,
@@ -171,6 +179,7 @@ export default defineComponent({
       reverseWords,
       shuffleWords,
       modalWordId,
+      clickWordItemArrow,
       changeEvaluation,
     };
   },
@@ -217,12 +226,12 @@ export default defineComponent({
         <WordListItem
           @click="() => changeAudio(i)"
           @click-face="modalWordId = word.id"
-          @click-arrow="isDetail = true"
+          @click-arrow="clickWordItemArrow(i)"
           :no="word.no"
           :subNo="word.sub_no"
           :word="word.english.subject"
           :chapter="word.chapter"
-          :evaluation="evaluations[word.id]"
+          :evaluation="evalMap[word.id]"
           :isActive="word.id === currentWord.id"
         />
       </template>
