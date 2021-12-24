@@ -21,7 +21,7 @@ export default defineComponent({
     const { setFilterForLearning } = useFilterForLearning(ports);
     const { setFilterForListening } = useFilterForListening(ports);
 
-    const loading = ref(true);
+    const page = ref<"default" | "loading" | "permission">("loading");
 
     observeAuthState(
       ports,
@@ -31,6 +31,12 @@ export default defineComponent({
         try {
           const permission = await checkPermission(ports);
           console.log("exists user data in firestore");
+
+          if (!permission) {
+            console.log("not permitted.");
+            page.value = "permission";
+            return;
+          }
 
           router.push("/");
         } catch (e) {
@@ -63,13 +69,13 @@ export default defineComponent({
           );
         }
 
-        loading.value = false;
+        page.value = "default";
       },
       async () => {
         console.log("not pass firebase auth");
 
         await router.push("/login");
-        loading.value = false;
+        page.value = "default";
       }
     );
 
@@ -82,7 +88,7 @@ export default defineComponent({
     window.addEventListener("resize", setVh);
 
     return {
-      loading,
+      page,
     };
   },
 });
@@ -90,8 +96,11 @@ export default defineComponent({
 
 <template>
   <div class="layout">
-    <div v-if="loading" class="layout__loading">Loading ...</div>
-    <div v-else class="layout__article"><slot /></div>
+    <div v-if="page === 'loading'" class="layout__msg">Loading...</div>
+    <div v-if="page === 'permission'" class="layout__msg">
+      You don't have access to this app.
+    </div>
+    <div v-if="page === 'default'" class="layout__article"><slot /></div>
   </div>
 </template>
 
@@ -101,9 +110,14 @@ export default defineComponent({
 .layout {
   width: 100%;
 
-  &__loading {
-    font-size: 2.4rem;
+  &__msg {
+    width: 80%;
+
     @include center-absolute;
+
+    text-align: center;
+    font-size: 2.4rem;
+    line-height: 3.2rem;
   }
 
   &__article {
