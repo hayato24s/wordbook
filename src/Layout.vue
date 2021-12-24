@@ -1,12 +1,15 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
+import { createFilter } from "./entities/filter";
 import { usePorts } from "./usecases";
 import { checkPermission } from "./usecases/checkPermission";
 import { createEvaluations } from "./usecases/createEvaluations";
 import { createUser } from "./usecases/createUser";
 import { dealWithSignInResult } from "./usecases/dealWithSignInResult";
 import { observeAuthState } from "./usecases/observeAuthState";
+import { useFilterForLearning } from "./usecases/useFilterForLearning";
+import { useFilterForListening } from "./usecases/useFilterForListening";
 
 export default defineComponent({
   name: "Layout",
@@ -14,6 +17,9 @@ export default defineComponent({
   async setup() {
     const router = useRouter();
     const ports = usePorts();
+
+    const { setFilterForLearning } = useFilterForLearning(ports);
+    const { setFilterForListening } = useFilterForListening(ports);
 
     const loading = ref(true);
 
@@ -42,6 +48,11 @@ export default defineComponent({
                 permission: true,
               });
               await createEvaluations(ports, uid);
+
+              // initialize filter
+              setFilterForLearning(createFilter());
+              setFilterForListening(createFilter());
+
               router.push("/");
             },
             async () => {
