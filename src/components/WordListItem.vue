@@ -86,6 +86,10 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import "~/scss/main.scss";
 
+* {
+  touch-action: pan-y;
+}
+
 .word-list-item {
   width: 100%;
   height: 4.8rem;
@@ -97,6 +101,7 @@ export default defineComponent({
   padding: 0 1.6rem;
 
   @include button-cursor;
+  touch-action: pan-y;
 
   &.--active {
     color: $bright-red;

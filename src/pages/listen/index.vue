@@ -272,6 +272,8 @@ export default defineComponent({
 .word-list {
   overflow-y: scroll;
 
+  touch-action: pan-y;
+
   &__border {
     width: 95%;
     height: 1px;
