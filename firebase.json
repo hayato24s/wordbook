@@ -11,6 +11,26 @@
         "source": "/login",
         "destination": "/",
         "type": 301
+      },
+      {
+        "source": "/learn",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/learn/problem",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/listen",
+        "destination": "/",
+        "type": 301
+      },
+      {
+        "source": "/listen/filter",
+        "destination": "/",
+        "type": 301
       }
     ]
   },
