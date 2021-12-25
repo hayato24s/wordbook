@@ -13,12 +13,12 @@ export default defineComponent({
   async setup() {
     const ports = usePorts();
 
-    const startLogin = (provider: Provider) => {
+    const login = (provider: Provider) => {
       trySignIn(ports, provider);
     };
 
     return {
-      startLogin,
+      login,
       googleImg,
       appleImg,
       twitterImg,
@@ -40,11 +40,12 @@ export default defineComponent({
     </div>
     <div class="login__btns btns">
       <img
-        @click="() => startLogin('Google')"
+        @click="() => login('Google')"
         class="btns__img"
         :src="googleImg"
         height="56"
       />
+      <button @click="() => login('Anonymous')">Guest</button>
       <!-- <img class="btns__img" :src="appleImg" height="52" />
       <img class="btns__img" :src="twitterImg" height="56" /> -->
     </div>
@@ -53,6 +54,12 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @import "~/scss/main.scss";
+
+button {
+  width: 22rem;
+  height: 4.8rem;
+  font-size: 1.6rem;
+}
 
 .login {
   height: 100%;

@@ -9,6 +9,7 @@ import { getEvaluations } from "~/usecases/getEvaluations";
 import { getLearningStatus } from "~/usecases/getLearningStatus";
 import { getUser } from "~/usecases/getUser";
 import { getWords } from "~/usecases/getWords";
+import noImage from "~/assets/no-image.png";
 
 export default defineComponent({
   name: "Home",
@@ -30,6 +31,7 @@ export default defineComponent({
       userName,
       photoUrl,
       learningStatus,
+      noImage,
     };
   },
 });
@@ -41,7 +43,7 @@ export default defineComponent({
       <template #text>ホーム</template>
     </Header>
     <div class="main">
-      <img class="main__img" :src="photoUrl" />
+      <img class="main__img" :src="photoUrl ? photoUrl : noImage" />
       <div class="main__text">{{ userName }} さんの学習状況</div>
       <Table class="main__table" :data="learningStatus" />
     </div>

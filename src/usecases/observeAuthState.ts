@@ -2,8 +2,13 @@ import { Ports } from "~/adapter";
 
 export const observeAuthState = (
   { firebase }: Ports,
-  authorizedCallback: () => Promise<void>,
+  authorizedCallback: (userInfo: {
+    uid: string;
+    name: string;
+    photoUrl: string;
+    isAnonymous: boolean;
+  }) => Promise<void>,
   unauthorizedCallback: () => Promise<void>
-) => {
+): void => {
   firebase.observeAuthState(authorizedCallback, unauthorizedCallback);
 };

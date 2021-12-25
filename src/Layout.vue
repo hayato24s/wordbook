@@ -3,10 +3,9 @@ import { defineComponent, ref } from "vue";
 import { useRouter } from "vue-router";
 import { createFilter } from "./entities/filter";
 import { usePorts } from "./usecases";
-import { checkPermission } from "./usecases/checkPermission";
 import { createEvaluations } from "./usecases/createEvaluations";
 import { createUser } from "./usecases/createUser";
-import { dealWithSignInResult } from "./usecases/dealWithSignInResult";
+import { getUser } from "./usecases/getUser";
 import { observeAuthState } from "./usecases/observeAuthState";
 import { useFilterForLearning } from "./usecases/useFilterForLearning";
 import { useFilterForListening } from "./usecases/useFilterForListening";
@@ -25,51 +24,40 @@ export default defineComponent({
 
     observeAuthState(
       ports,
-      async () => {
+      async ({ uid, name, photoUrl, isAnonymous }) => {
         console.log("pass firebase auth");
 
         try {
-          const permission = await checkPermission(ports);
+          const user = await getUser(ports);
           console.log("exists user data in firestore");
 
-          if (!permission) {
-            console.log("not permitted.");
+          if (user.permission) {
+            console.log("permitted");
+            await router.push("/");
+            page.value = "default";
+          } else {
+            console.log("not permitted");
             page.value = "permission";
-            return;
           }
-
-          router.push("/");
         } catch (e) {
           console.log("not found user data in firestore");
 
-          await dealWithSignInResult(
-            ports,
-            async ({ uid, name, photoUrl }) => {
-              console.log("creat user data in firestore");
+          await createUser(ports, {
+            uid,
+            name: isAnonymous ? "Guest" : name,
+            photoUrl,
+            permission: true,
+          });
+          await createEvaluations(ports, uid);
+          console.log("created user data in firestore");
 
-              await createUser(ports, {
-                uid,
-                name,
-                photoUrl,
-                permission: true,
-              });
-              await createEvaluations(ports, uid);
+          // initialize filter
+          setFilterForLearning(createFilter());
+          setFilterForListening(createFilter());
 
-              // initialize filter
-              setFilterForLearning(createFilter());
-              setFilterForListening(createFilter());
-
-              router.push("/");
-            },
-            async () => {
-              console.log("no result");
-
-              await router.push("/login");
-            }
-          );
+          await router.push("/");
+          page.value = "default";
         }
-
-        page.value = "default";
       },
       async () => {
         console.log("not pass firebase auth");

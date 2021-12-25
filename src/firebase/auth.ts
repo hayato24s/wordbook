@@ -1,12 +1,12 @@
 import {
   getAuth,
-  getRedirectResult,
   GoogleAuthProvider,
   onAuthStateChanged,
+  signInAnonymously,
   signInWithRedirect,
+  User as FirebaseUser,
 } from "firebase/auth";
 import { Provider } from "~/entities/provider";
-import { User } from "./types";
 
 const auth = getAuth();
 
@@ -15,12 +15,22 @@ export const getUserId = () => {
 };
 
 export const observeAuthState = (
-  authorizedCallback: () => Promise<void>,
+  authorizedCallback: (userInfo: {
+    uid: string;
+    name: string;
+    photoUrl: string;
+    isAnonymous: boolean;
+  }) => Promise<void>,
   unauthorizedCallback: () => Promise<void>
 ) => {
-  onAuthStateChanged(auth, async (authUser) => {
+  onAuthStateChanged(auth, async (authUser: FirebaseUser | null) => {
     if (authUser) {
-      await authorizedCallback();
+      await authorizedCallback({
+        uid: authUser.uid,
+        name: authUser.displayName ?? "",
+        photoUrl: authUser.photoURL ?? "",
+        isAnonymous: authUser.isAnonymous,
+      });
     } else {
       await unauthorizedCallback();
     }
@@ -28,23 +38,8 @@ export const observeAuthState = (
 };
 
 export const trySignIn = (prov: Provider) => {
+  if (prov == "Anonymous") return signInAnonymously(auth);
+
   const provider = new GoogleAuthProvider();
   return signInWithRedirect(auth, provider);
-};
-
-export const dealWithSignInResult = async (
-  successfulCallback: (
-    result: Pick<User, "uid" | "name" | "photoUrl">
-  ) => Promise<void>,
-  failedCallback: () => Promise<void>
-) => {
-  await getRedirectResult(auth).then(async (result) => {
-    if (result)
-      await successfulCallback({
-        uid: result.user.uid,
-        name: result.user.displayName ?? "",
-        photoUrl: result.user.photoURL ?? "",
-      });
-    else await failedCallback();
-  });
 };

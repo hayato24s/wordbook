@@ -6,19 +6,13 @@ import {
   setEvaluations,
 } from "./db";
 import { getSoundUrl } from "./storage";
-import {
-  dealWithSignInResult,
-  getUserId,
-  observeAuthState,
-  trySignIn,
-} from "./auth";
+import { getUserId, observeAuthState, trySignIn } from "./auth";
 
 export const useFirebase = () => {
   return {
     getUserId,
     observeAuthState,
     trySignIn,
-    dealWithSignInResult,
     createUser,
     getUser,
     getWords,
