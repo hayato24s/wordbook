@@ -28,6 +28,7 @@ export default defineComponent({
     const error = ref<string>("");
     onErrorCaptured((e) => {
       error.value = e.message;
+      return true;
     });
 
     observeAuthState(
