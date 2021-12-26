@@ -1,71 +1,19 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
-import { useRouter } from "vue-router";
-import { createFilter } from "./entities/filter";
+import { defineComponent } from "vue";
 import { usePorts } from "./usecases";
-import { createEvaluations } from "./usecases/createEvaluations";
-import { createUser } from "./usecases/createUser";
-import { getUser } from "./usecases/getUser";
-import { observeAuthState } from "./usecases/observeAuthState";
-import { useFilterForLearning } from "./usecases/useFilterForLearning";
-import { useFilterForListening } from "./usecases/useFilterForListening";
+import { useLoading } from "./usecases/useLoading";
 
 export default defineComponent({
   name: "Layout",
-  components: {},
-  async setup() {
-    const router = useRouter();
+  props: {
+    error: {
+      type: String,
+      default: "",
+    },
+  },
+  setup() {
     const ports = usePorts();
-
-    const { setFilterForLearning } = useFilterForLearning(ports);
-    const { setFilterForListening } = useFilterForListening(ports);
-
-    const page = ref<"default" | "loading" | "permission">("loading");
-
-    observeAuthState(
-      ports,
-      async ({ uid, name, photoUrl, isAnonymous }) => {
-        console.log("pass firebase auth");
-
-        try {
-          const user = await getUser(ports);
-          console.log("exists user data in firestore");
-
-          if (user.permission) {
-            console.log("permitted");
-            await router.push("/");
-            page.value = "default";
-          } else {
-            console.log("not permitted");
-            page.value = "permission";
-          }
-        } catch (e) {
-          console.log("not found user data in firestore");
-
-          await createUser(ports, {
-            uid,
-            name: isAnonymous ? "Guest" : name,
-            photoUrl,
-            permission: true,
-          });
-          await createEvaluations(ports, uid);
-          console.log("created user data in firestore");
-
-          // initialize filter
-          setFilterForLearning(createFilter());
-          setFilterForListening(createFilter());
-
-          await router.push("/");
-          page.value = "default";
-        }
-      },
-      async () => {
-        console.log("not pass firebase auth");
-
-        await router.push("/login");
-        page.value = "default";
-      }
-    );
+    const { loading } = useLoading(ports);
 
     const setVh = () => {
       const vh = window.innerHeight * 0.01;
@@ -76,7 +24,7 @@ export default defineComponent({
     window.addEventListener("resize", setVh);
 
     return {
-      page,
+      loading,
     };
   },
 });
@@ -84,11 +32,13 @@ export default defineComponent({
 
 <template>
   <div class="layout">
-    <div v-if="page === 'loading'" class="layout__msg">Loading...</div>
-    <div v-if="page === 'permission'" class="layout__msg">
-      You don't have access to this app.
+    <div v-if="loading || error" class="layout__msg">
+      <template v-if="loading"> Loading... </template>
+      <template v-else>{{ error }}</template>
     </div>
-    <div v-if="page === 'default'" class="layout__article"><slot /></div>
+    <div v-else class="layout__article">
+      <slot />
+    </div>
   </div>
 </template>
 

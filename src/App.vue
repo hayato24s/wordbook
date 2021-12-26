@@ -1,25 +1,97 @@
 <script lang="ts">
-// This starter template is using Vue 3 <script setup> SFCs
-// Check out https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup
-import { defineComponent } from "vue";
+import { defineComponent, ref } from "vue";
+import { useRouter } from "vue-router";
 import Layout from "~/Layout.vue";
+import { createFilter } from "./entities/filter";
+import { NotPermittedError } from "./errors";
+import { usePorts } from "./usecases";
+import { createEvaluations } from "./usecases/createEvaluations";
+import { createUser } from "./usecases/createUser";
+import { getUser } from "./usecases/getUser";
+import { observeAuthState } from "./usecases/observeAuthState";
+import { useFilterForLearning } from "./usecases/useFilterForLearning";
+import { useFilterForListening } from "./usecases/useFilterForListening";
+import { useLoading } from "./usecases/useLoading";
 
 export default defineComponent({
   components: {
     Layout,
   },
-  setup() {},
+  setup() {
+    const ports = usePorts();
+    const router = useRouter();
+
+    const { setLoading } = useLoading(ports);
+    const { setFilterForLearning } = useFilterForLearning(ports);
+    const { setFilterForListening } = useFilterForListening(ports);
+
+    const error = ref<string>("");
+
+    observeAuthState(
+      ports,
+      async ({ uid, name, photoUrl, isAnonymous }) => {
+        console.log("pass firebase auth");
+
+        try {
+          const user = await getUser(ports);
+          console.log("exists user data in firestore");
+
+          if (user.permission) {
+            console.log("permitted");
+            await router.push("/");
+          } else {
+            throw new NotPermittedError("You don't have access to this app.");
+          }
+        } catch (e) {
+          if (e instanceof NotPermittedError) {
+            error.value = e.message;
+            setLoading(false);
+            return;
+          }
+
+          console.log("not found user data in firestore");
+
+          await createUser(ports, {
+            uid,
+            name: isAnonymous ? "Guest" : name,
+            photoUrl,
+            permission: true,
+          });
+          await createEvaluations(ports, uid);
+          console.log("created user data in firestore");
+
+          // initialize filter
+          setFilterForLearning(createFilter());
+          setFilterForListening(createFilter());
+
+          await router.push("/");
+        }
+
+        setLoading(false);
+      },
+      async () => {
+        console.log("not pass firebase auth");
+
+        await router.push("/login");
+        setLoading(false);
+      }
+    );
+
+    return {
+      error,
+    };
+  },
 });
 </script>
 
 <template>
-  <Suspense>
-    <template #default>
-      <Layout>
+  <Layout :error="error">
+    <Suspense>
+      <template #default>
         <router-view />
-      </Layout>
-    </template>
-  </Suspense>
+      </template>
+    </Suspense>
+  </Layout>
 </template>
 
 <style lang="scss">

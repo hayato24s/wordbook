@@ -6,15 +6,18 @@ import googleImg from "~/assets/google_btn.png";
 import appleImg from "~/assets/apple_btn.png";
 import twitterImg from "~/assets/twitter_btn.png";
 import { Provider } from "~/entities/provider";
+import { useLoading } from "~/usecases/useLoading";
 
 export default defineComponent({
   name: "Login",
   components: {},
   async setup() {
     const ports = usePorts();
+    const { setLoading } = useLoading(ports);
 
     const login = (provider: Provider) => {
       trySignIn(ports, provider);
+      setLoading(true);
     };
 
     return {
