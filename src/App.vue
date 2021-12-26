@@ -1,5 +1,5 @@
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, onErrorCaptured, ref } from "vue";
 import { useRouter } from "vue-router";
 import Layout from "~/Layout.vue";
 import { createFilter } from "./entities/filter";
@@ -26,6 +26,9 @@ export default defineComponent({
     const { setFilterForListening } = useFilterForListening(ports);
 
     const error = ref<string>("");
+    onErrorCaptured((e) => {
+      error.value = e.message;
+    });
 
     observeAuthState(
       ports,

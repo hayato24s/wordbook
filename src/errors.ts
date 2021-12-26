@@ -6,4 +6,8 @@ class BaseError extends Error {
   }
 }
 
+export class UnauthorizedError extends BaseError {}
+
 export class NotPermittedError extends BaseError {}
+
+export class InternalServerError extends BaseError {}
