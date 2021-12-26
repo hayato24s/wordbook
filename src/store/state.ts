@@ -8,6 +8,7 @@ export interface State {
   filterForLearning: Filter;
   filterForListening: Filter;
   soundUrls: Record<string, string>;
+  loading: boolean;
 }
 
 export const initState: State = {
@@ -17,4 +18,5 @@ export const initState: State = {
   filterForLearning: createFilter(),
   filterForListening: createFilter(),
   soundUrls: {},
+  loading: true,
 };

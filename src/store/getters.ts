@@ -21,4 +21,7 @@ export const getters: GetterTree<State, State> = {
     (id: string): string | undefined => {
       return state.soundUrls[id];
     },
+  loading(state): boolean {
+    return state.loading;
+  },
 };

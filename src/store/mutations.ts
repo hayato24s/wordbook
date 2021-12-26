@@ -25,4 +25,7 @@ export const mutations: MutationTree<State> = {
   saveSoundUrl(state, { id, url }: { id: string; url: string }) {
     state.soundUrls[id] = url;
   },
+  setLoading(state, loading: boolean) {
+    state.loading = loading;
+  },
 };
