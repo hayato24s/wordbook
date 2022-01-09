@@ -13,7 +13,7 @@ import {
   userConverter,
   wordConverter,
 } from "./converter";
-import { EvaluationMap, User } from "./types";
+import { EvaluationMap, User, Word } from "./types";
 
 const db = getFirestore(firebaseApp);
 
@@ -54,16 +54,16 @@ export const setEvaluations = async (
   setDoc(evalRef, changes, { merge: true });
 };
 
-export const batchSetWords = async (json: any) => {
+export const batchSetWords = async (words: Omit<Word, "id">[]) => {
   console.log("start batch");
   const batch = writeBatch(db);
-  json.forEach((data: any) => {
-    const newWordRef = doc(collection(db, "words"));
+  words.forEach((data) => {
+    const newWordRef = doc(collection(db, "words")).withConverter(
+      wordConverter
+    );
     const newWord = {
-      ...data,
       id: newWordRef.id,
-      no: Number(data.no),
-      sub_no: Number(data.sub_no),
+      ...data,
     };
     console.log(newWord);
     batch.set(newWordRef, newWord);

@@ -72,10 +72,9 @@ export const englishTypeGuard = (english: any): english is English => {
   return true;
 };
 
-export const wordTypeGuard = (word: any): word is Word => {
+export const wordWithoutIdTypeGuard = (word: any): word is Omit<Word, "id"> => {
   if (
-    !checkObjectHasProperty<Word>(word, [
-      "id",
+    !checkObjectHasProperty<Omit<Word, "id">>(word, [
       "no",
       "sub_no",
       "chapter",
@@ -85,13 +84,21 @@ export const wordTypeGuard = (word: any): word is Word => {
   )
     return false;
 
-  if (!checkType(word.id, "string")) return false;
   if (!checkType(word.no, "number")) return false;
   if (!checkType(word.sub_no, "number")) return false;
   if (!checkType(word.japanese, "string")) return false;
 
   if (!chapterTypeGuard(word.chapter)) return false;
   if (!englishTypeGuard(word.english)) return false;
+
+  return true;
+};
+
+export const wordTypeGuard = (word: any): word is Word => {
+  if (!checkObjectHasProperty<Word>(word, ["id"])) return false;
+  if (!checkType(word.id, "string")) return false;
+
+  if (!wordWithoutIdTypeGuard(word)) return false;
 
   return true;
 };

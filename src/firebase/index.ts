@@ -1,4 +1,5 @@
 import {
+  batchSetWords,
   createUser,
   getUser,
   getWords,
@@ -10,6 +11,7 @@ import { getUserId, observeAuthState, trySignIn } from "./auth";
 
 export const useFirebase = () => {
   return {
+    batchSetWords,
     getUserId,
     observeAuthState,
     trySignIn,
