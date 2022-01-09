@@ -137,7 +137,7 @@ export default defineComponent({
         const el = wordItemDoms[index.value];
         if (!el) return;
         const bottom = el.offsetTop + el.offsetHeight;
-        if (wordListBottom < bottom) {
+        if (wordListBottom + wordListDom.scrollTop < bottom) {
           wordListDom.scrollTo(0, bottom - wordListBottom);
         }
       }
