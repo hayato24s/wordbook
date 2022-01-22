@@ -1,5 +1,12 @@
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, watch } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUpdated,
+  ref,
+  watch,
+} from "vue";
 import { useRouter } from "vue-router";
 import Audio from "~/components/Audio.vue";
 import Button from "~/components/Button.vue";
@@ -45,13 +52,30 @@ export default defineComponent({
     let wordListDom: HTMLElement | undefined = undefined;
     let wordListBottom = 0;
     let wordItemDoms: HTMLElement[] | undefined = undefined;
-    onMounted(() => {
-      wordListDom = document.getElementById("word-list") as HTMLElement;
-      wordListBottom = wordListDom.offsetTop + wordListDom.offsetHeight;
+    const setWordItemDoms = () => {
+      if (!wordListDom) return;
       const children = wordListDom.children;
       wordItemDoms = Array.from(children).filter((child) =>
         child.classList.contains("word-list-item")
       ) as HTMLElement[];
+    };
+    onMounted(() => {
+      wordListDom = document.getElementById("word-list") as HTMLElement;
+      wordListBottom = wordListDom.offsetTop + wordListDom.offsetHeight;
+      setWordItemDoms();
+    });
+
+    /** rendering words */
+    onMounted(() => {
+      initObserver();
+      if (filteredWords.value.length == renderedWords.value.length) return;
+      setTarget();
+      observeTarget();
+    });
+    onUpdated(() => {
+      if (filteredWords.value.length == renderedWords.value.length) return;
+      setTarget();
+      observeTarget();
     });
 
     const { uid: userId } = await getUser(ports);
@@ -85,21 +109,6 @@ export default defineComponent({
       continuous.value = newContinuous;
     };
     await changeAudio(0, false);
-
-    /** order of words */
-    const order = ref<Order>("desc");
-    const reverseWords = async () => {
-      order.value = order.value === "asc" ? "desc" : "asc";
-      filteredWords.value.sort(compareWords);
-      if (order.value === "desc") filteredWords.value.reverse();
-      await changeAudio(0, false);
-    };
-    const shuffleWords = async () => {
-      order.value = "shuffle";
-      shuffleArray(filteredWords.value);
-      await changeAudio(0, false);
-    };
-    reverseWords();
 
     /** header */
     const clickArrowBack = () => {
@@ -142,6 +151,10 @@ export default defineComponent({
         }
       }
     );
+    const scrollToTop = () => {
+      if (!wordListDom) return;
+      wordListDom.scrollTo(0, 0);
+    };
 
     /** preload sound url */
     watch(
@@ -164,9 +177,71 @@ export default defineComponent({
       }
     );
 
+    /** rendering words */
+    const renderedWords = ref<Word[]>(filteredWords.value.slice(0, 100));
+    const observer = ref<IntersectionObserver | undefined>();
+    const target = ref<Element | undefined>();
+    const callback: IntersectionObserverCallback = ([entry], observer) => {
+      if (target.value == undefined || !entry.isIntersecting) return;
+      const endIndex = clamp(
+        renderedWords.value.length + 50,
+        0,
+        filteredWords.value.length
+      );
+      renderedWords.value = filteredWords.value.slice(0, endIndex);
+      observer.unobserve(target.value);
+    };
+    const options: IntersectionObserverInit = {
+      root: undefined,
+      rootMargin: "0px",
+      threshold: 0,
+    };
+    const initObserver = () => {
+      if (!wordListDom) return;
+      options.root = wordListDom;
+      observer.value = new IntersectionObserver(callback, options);
+    };
+    const setTarget = () => {
+      if (!wordItemDoms) return;
+      setWordItemDoms();
+      const idx = clamp(
+        renderedWords.value.length - 20,
+        0,
+        wordItemDoms.length - 1
+      );
+      target.value = wordItemDoms[idx];
+    };
+    const observeTarget = () => {
+      if (!observer.value || !target.value) return;
+      observer.value.observe(target.value);
+    };
+    const reRenderWords = () => {
+      renderedWords.value = filteredWords.value.slice(0, 100);
+    };
+
+    /** order of words */
+    const order = ref<Order>("desc");
+    const reverseWords = async () => {
+      order.value = order.value === "asc" ? "desc" : "asc";
+      filteredWords.value.sort(compareWords);
+      if (order.value === "desc") filteredWords.value.reverse();
+      reRenderWords();
+      scrollToTop();
+      await changeAudio(0, false);
+    };
+    const shuffleWords = async () => {
+      order.value = "shuffle";
+      shuffleArray(filteredWords.value);
+      reRenderWords();
+      scrollToTop();
+      await changeAudio(0, false);
+    };
+    reverseWords();
+
     return {
       evalMap,
       filteredWords,
+      renderedWords,
       src,
       index,
       changeAudio,
@@ -221,7 +296,7 @@ export default defineComponent({
     </Header>
 
     <section v-if="!isDetail" id="word-list" class="word-list">
-      <template v-for="(word, i) in filteredWords" :key="word.id">
+      <template v-for="(word, i) in renderedWords" :key="word.id">
         <div v-if="i !== 0" class="word-list__border"></div>
         <WordListItem
           @click="() => changeAudio(i)"
