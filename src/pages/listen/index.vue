@@ -178,7 +178,7 @@ export default defineComponent({
     );
 
     /** rendering words */
-    const renderedWords = ref<Word[]>(filteredWords.value.slice(0, 100));
+    const renderedWords = ref<Word[]>(filteredWords.value.slice(0, 50));
     const observer = ref<IntersectionObserver | undefined>();
     const target = ref<Element | undefined>();
     const callback: IntersectionObserverCallback = ([entry], observer) => {
@@ -205,7 +205,7 @@ export default defineComponent({
       if (!wordItemDoms) return;
       setWordItemDoms();
       const idx = clamp(
-        renderedWords.value.length - 20,
+        renderedWords.value.length - 30,
         0,
         wordItemDoms.length - 1
       );
@@ -216,7 +216,7 @@ export default defineComponent({
       observer.value.observe(target.value);
     };
     const reRenderWords = () => {
-      renderedWords.value = filteredWords.value.slice(0, 100);
+      renderedWords.value = filteredWords.value.slice(0, 50);
     };
 
     /** order of words */
