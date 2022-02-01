@@ -13,6 +13,7 @@ const iconNameMap = {
   listening: "headphones",
   learn: "description",
   right: "chevron_right",
+  logout: "logout",
 };
 
 type IconName = keyof typeof iconNameMap;

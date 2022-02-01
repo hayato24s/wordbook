@@ -41,6 +41,14 @@ export default defineComponent({
   <div class="home">
     <Header>
       <template #text>ホーム</template>
+      <template #right-btn>
+        <IconButton
+          @click="$router.push('/logout')"
+          size="small"
+          color="black"
+          iconName="logout"
+        />
+      </template>
     </Header>
     <div class="main">
       <img class="main__img" :src="photoUrl ? photoUrl : noImage" />

@@ -47,14 +47,9 @@ export default defineComponent({
             throw new NotPermittedError("You don't have access to this app.");
           }
         } catch (e) {
-          if (e instanceof NotPermittedError) {
-            error.value = e.message;
-            setLoading(false);
-            return;
-          }
-
           console.log("not found user data in firestore");
 
+          // 認証は通ったが、データが存在しないとき
           await createUser(ports, {
             uid,
             name: isAnonymous ? "Guest" : name,

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "~/pages/index.vue";
-import Login from "~/pages/login.vue";
+import Login from "~/pages/auth/login.vue";
+import Logout from "~/pages/auth/logout.vue";
 import Learn from "~/pages/learn/index.vue";
 import Problem from "~/pages/learn/problem.vue";
 import Filter from "~/pages/listen/filter.vue";
@@ -11,6 +12,7 @@ const history = createWebHistory();
 const routes = [
   { path: "/", component: Home },
   { path: "/login", component: Login },
+  { path: "/logout", component: Logout },
   { path: "/learn", component: Learn },
   { path: "/learn/problem", component: Problem },
   { path: "/listen", component: Listen },

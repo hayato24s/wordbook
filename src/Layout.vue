@@ -33,8 +33,8 @@ export default defineComponent({
 <template>
   <div class="layout">
     <div v-if="loading || error" class="layout__msg">
-      <template v-if="loading"> Loading... </template>
-      <template v-else>{{ error }}</template>
+      <template v-if="error">{{ error }}</template>
+      <template v-else> Loading... </template>
     </div>
     <div v-else class="layout__article">
       <slot />
