@@ -7,7 +7,7 @@ import {
   setEvaluations,
 } from "./db";
 import { getSoundUrl } from "./storage";
-import { getUserId, observeAuthState, trySignIn } from "./auth";
+import { getUserId, observeAuthState, trySignIn, trySignOut } from "./auth";
 
 export const useFirebase = () => {
   return {
@@ -15,6 +15,7 @@ export const useFirebase = () => {
     getUserId,
     observeAuthState,
     trySignIn,
+    trySignOut,
     createUser,
     getUser,
     getWords,

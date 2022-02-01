@@ -43,3 +43,7 @@ export const trySignIn = (prov: Provider) => {
   const provider = new GoogleAuthProvider();
   return signInWithRedirect(auth, provider);
 };
+
+export const trySignOut = () => {
+  return auth.signOut();
+};
